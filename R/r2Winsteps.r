@@ -1,5 +1,7 @@
 #' Write Data and Control Files for Winsteps From R
 #'
+#' Function for writing files from R to Winsteps for Rasch analysis.
+#'
 #' @param itms Dataframe or matrix of items responses
 #' @param dems Dataframe or matrix of person identifiers/demographic fields
 #' @param title Title of the analysis, which will be used in the name of the data and text files. Defaults to "r2Winsteps".
@@ -8,8 +10,9 @@
 #' @param format Format in which item and person files should be returned. Takes values "txt" and "XLS" to return txt and XLS files, 
 #' respectively. Defaults to "txt". Note that "txt" must be used if subsequent calls to batch.ifile/batch.pfile are used to read the
 #' files back into R.
+#' @export
+#' @return Control and Data file for analysis with Winsteps.
 
-##### Put in check for Stringr package version.
 ##### Build in capability for partial credit model
 
 r2Winsteps<-function(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt"){
