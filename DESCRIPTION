@@ -1,0 +1,9 @@
+Package: r2Winsteps
+Title: Write and Read Winsteps Files From R
+Version: 0.0.0.9000
+Authors@R: person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre"))
+Description: This package takes R dataframes or matrices and writes out data and control files for analysis with Winsteps. Following analysis, the package includes functions to read the files back into R for further investigation and/or to utilize the plotting capabilities of R. Batch calls are available to efficiently process multiple data files.
+Depends: R (>= 3.2.0)
+Imports: stringr (>= 1.0.0)
+License: MIT
+LazyData: true
