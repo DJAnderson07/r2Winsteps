@@ -29,5 +29,5 @@ batchWinsteps<-function(batchName, dir = getwd(), outFileNames = NULL, pattern =
 			sep = "\n")
 	sink()
 
-return(setwd(oldD))
+	on.exit(setwd(oldD), add = TRUE)
 }

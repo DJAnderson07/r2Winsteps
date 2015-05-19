@@ -27,6 +27,6 @@ batch.ifile<-function(dir = getwd(), pattern = "Ifile"){
 	}
 	names(ifiles)<-substr(files,1,nchar(files) - 4)
 
-	setwd(oldD)
+	on.exit(setwd(oldD), add = TRUE)
 return(ifiles)
 }

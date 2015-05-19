@@ -12,7 +12,8 @@
 #' @return List of person files, with each element of the lit representing a sererate person file.
 
 batch.pfile<-function(demL, dir = getwd(),r2WinstepsFile = TRUE){ #THINK ABOUT DROPPING DATA FRAME REQUIREMENT
-
+	
+	oldDir<-getwd()
 	setwd(dir)
 
 	files<-list.files()
@@ -83,5 +84,6 @@ batch.pfile<-function(demL, dir = getwd(),r2WinstepsFile = TRUE){ #THINK ABOUT D
 	})
 	names(pfile)<-substr(files,1,(nchar(files)) - 4)
 
+	on.exit(setwd(oldDir), add = TRUE)
 return(pfile)
 }
