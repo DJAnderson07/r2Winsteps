@@ -31,7 +31,7 @@ r2Winsteps<-function(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRU
 #	require(stringr)
 	for(i in 1:ncol(dems)){
 		dems[,i]<-as.character(dems[,i])
-		dems[,i]<-str_pad(dems[,i], max(nchar(dems[,i])),side = "right")
+		dems[,i]<-stringr::str_pad(dems[,i], max(nchar(dems[,i])),side = "right")
 	}
 
 	dstring<-paste(dems[,1],dems[,2], sep = " | ")
