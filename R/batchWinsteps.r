@@ -25,7 +25,7 @@ batchWinsteps<-function(batchName, dir = getwd(), outFileNames = NULL, pattern =
 	
 	sink(paste(batchName,"bat",sep = "."))
 		cat(paste(first, files, outFileNames, sep = " "),
-			"PAUSE",
+			"EXIT",
 			sep = "\n")
 	sink()
 
