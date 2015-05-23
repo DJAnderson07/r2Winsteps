@@ -4,10 +4,11 @@
 \alias{batch.pfile}
 \title{Batch Read Winsteps Person Files (pfile) Into R}
 \usage{
-batch.pfile(demL, dir = getwd(), r2WinstepsFile = TRUE)
+batch.pfile(demNameL, dir = getwd(), pattern = "Pfile",
+  r2WinstepsFile = TRUE)
 }
 \arguments{
-\item{demL}{List containing the demographic variables for pfiles. Note that the list must be in the same order that person files are read in automatically (otherwise the function will return an error).}
+\item{demNameL}{List containing the names of the demographic variables for pfiles.}
 
 \item{dir}{Directory where pfiles are saved. Defaults to current working directory.}
 
