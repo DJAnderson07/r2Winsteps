@@ -28,7 +28,6 @@ r2Winsteps<-function(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRU
 		istring<-paste(istring,itms[,i],sep = "")
 	}
 
-#	require(stringr)
 	for(i in 1:ncol(dems)){
 		dems[,i]<-as.character(dems[,i])
 		dems[,i]<-stringr::str_pad(dems[,i], max(nchar(dems[,i])),side = "right")
