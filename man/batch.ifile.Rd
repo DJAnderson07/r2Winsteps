@@ -2,14 +2,22 @@
 % Please edit documentation in R/batchIfile.r
 \name{batch.ifile}
 \alias{batch.ifile}
-\title{Batch Read Winsteps Item Files (ifile) Into R}
+\title{Batch Read Winsteps Item Files (ifile) Into R (Winsteps 3.6.8)}
 \usage{
-batch.ifile(dir = getwd(), pattern = "Ifile")
+batch.ifile(dir = getwd(), pattern = "Ifile", varWidths = c(1, 5, 8, 3, 8,
+  9, 7, 7, 7, 7, 7, 8, 7, 7, 6, 6, 7, 2, 2, 100), iFileNames = c("Dropped",
+  "Entry", "Difficulty", "Status", "Count", "RawScore", "SE", "Infit",
+  "Infit_Z", "Outfit", "Outfit_Z", "Displacement", "PointMeasureCorr", "Weight",
+  "ObservMatch", "ExpectMatch", "PostHocDiscrim", "Group", "Model", "ItemID"))
 }
 \arguments{
 \item{dir}{The directory where the item files are saved.}
 
 \item{pattern}{The common character string in all item files. Defaults to "Ifile", which is what is automatically generated when r2Winsteps is called.}
+
+\item{varWidths}{Width of ifile variables.}
+
+\item{iFileNames}{Column names for the item files.}
 }
 \value{
 List of Winsteps ifiles, where each element of the list represents a different ifile.
