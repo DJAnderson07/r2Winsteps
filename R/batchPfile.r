@@ -11,7 +11,7 @@
 #'
 #' @return List of person files, with each element of the lit representing a sererate person file.
 
-batch.pfile<-function(demNameL = NULL, dir = getwd(), pattern = "Pfile", r2WinstepsFile = TRUE){ #THINK ABOUT DROPPING DATA FRAME REQUIREMENT
+batch.pfile<-function(demNameL = NULL, dir = getwd(), pattern = "Pfile", r2WinstepsFile = TRUE){ 
 	
 	oldDir<-getwd()
 	setwd(dir)
@@ -42,7 +42,6 @@ batch.pfile<-function(demNameL = NULL, dir = getwd(), pattern = "Pfile", r2Winst
 		}
 		invisible(file.remove(demFileNames))
 
-	
 		for(i in 1:length(pfile)){
 			pfile[[i]]<-cbind(pfile[[i]][,-ncol(pfile[[i]])],demFiles[[i]])
 		}
@@ -73,7 +72,7 @@ batch.pfile<-function(demNameL = NULL, dir = getwd(), pattern = "Pfile", r2Winst
 
 	if(r2WinstepsFile == FALSE){
 		for(i in 1:length(pfile)){
-			names(pfile[[i]])<-c(pFileNamesL[[i]][1:(ncol(l[[1]]) -1) ],"NAME")
+			names(pfile[[i]])<-c(pFileNamesL[[i]][1:(ncol(pfile[[i]]) -1) ],"NAME")
 		}
 	}
 
