@@ -411,4 +411,5 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
                     )
             sink()
     }
+return(match.call())
 }
