@@ -4,13 +4,22 @@
 \alias{r2Winsteps}
 \title{Write data and control files for Winsteps from R.}
 \usage{
-r2Winsteps(itms, dems, partialCredit = FALSE, title = "r2Winsteps",
-  Ifile = TRUE, Pfile = TRUE, format = "txt")
+r2Winsteps(itms, dems, partialCredit = FALSE, anchorFile = NULL,
+  title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt")
 }
 \arguments{
 \item{itms}{Dataframe or matrix of items responses}
 
 \item{dems}{Dataframe or matrix of person identifiers/demographic fields}
+
+\item{partialCredit}{Logical. Should Masters' partial credit model be
+estimated? Defaults to FALSE. If the data include more than two categories
+and \code{partialCredit} == FALSE, then the control file will be written
+such that Andrich's rating scale model is estimated. If the data include
+only two response options, then partialCredit must be set to FALSE.}
+
+\item{anchorFile}{Optional name of an anchor file to be included in the
+analysis, see \code{\link{write.anchor}}}
 
 \item{title}{Title of the analysis, which will be used in the name of the
 data and text files. Defaults to "r2Winsteps".}
@@ -20,7 +29,7 @@ Takes values "txt" and "XLS" to return txt and XLS files, respectively.
 Defaults to "txt". Note that "txt" must be used if subsequent calls to
 batch.ifile/batch.pfile are used to read thefiles back into R.}
 
-\item{ifile}{Logical, default to TRUE. Should item files be returned?}
+\item{ifile}{Logical. Should item files be returned? Defaults to TRUE.}
 
 \item{pfile}{Logical, default to TRUE. Should person files be returned?}
 }
@@ -28,6 +37,7 @@ batch.ifile/batch.pfile are used to read thefiles back into R.}
 Control and Data file for analysis with Winsteps.
 }
 \description{
-Function for writing files from R to Winsteps for Rasch analysis.
+Function for writing control and data files from R to Winsteps for Rasch
+  analysis.
 }
 

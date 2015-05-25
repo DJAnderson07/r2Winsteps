@@ -1,12 +1,20 @@
 #' Write data and control files for Winsteps from R.
 #'
-#' Function for writing files from R to Winsteps for Rasch analysis.
+#' Function for writing control and data files from R to Winsteps for Rasch 
+#'   analysis.
 #'
 #' @param itms Dataframe or matrix of items responses
 #' @param dems Dataframe or matrix of person identifiers/demographic fields
 #' @param title Title of the analysis, which will be used in the name of the 
 #'   data and text files. Defaults to "r2Winsteps".
-#' @param ifile Logical, default to TRUE. Should item files be returned?
+#' @param partialCredit Logical. Should Masters' partial credit model be 
+#'   estimated? Defaults to FALSE. If the data include more than two categories
+#'   and \code{partialCredit} == FALSE, then the control file will be written 
+#'   such that Andrich's rating scale model is estimated. If the data include
+#'   only two response options, then partialCredit must be set to FALSE.
+#' @param anchorFile Optional name of an anchor file to be included in the
+#'   analysis, see \code{\link{write.anchor}}
+#' @param ifile Logical. Should item files be returned? Defaults to TRUE. 
 #' @param pfile Logical, default to TRUE. Should person files be returned?
 #' @param format Format in which item and person files should be returned. 
 #'   Takes values "txt" and "XLS" to return txt and XLS files, respectively. 
@@ -17,8 +25,8 @@
 
 ##### Build in capability for partial credit model
 
-r2Winsteps<-function (itms, dems, partialCredit = FALSE, title = "r2Winsteps", 
-    Ifile = TRUE, Pfile = TRUE, format = "txt"){
+r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL, 
+    title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt"){
 
 #=============================== Write Data file ===============================
 	#Convert itms to character, code missing data as "M"
@@ -94,7 +102,8 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, title = "r2Winsteps",
     wid <- paste("XWIDE = ", maxWide, sep = "")
     cod <- paste("CODES = ", paste(codes, collapse = " "), sep = "")
     totSc <- "TOTALSCORE = YES"
-    
+    afile<-paste("IAFILE = ", anchorFile, sep = "")
+
     if (format == "XLS") {
         ifile <- paste("IFILE = ", paste(title, "Ifile.xls", 
             sep = ""))
@@ -126,139 +135,280 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, title = "r2Winsteps",
     
 #================================= Write Files =================================
     if (Ifile == TRUE & Pfile == TRUE & length(codes) == 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, ifile, pfile, sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, ifile, pfile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == TRUE & Pfile == FALSE & length(codes) == 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, ifile, sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, ifile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == TRUE & length(codes) == 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, pfile, sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, pfile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == FALSE & length(codes) == 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
+
     if (partialCredit == TRUE & length(codes) == 2) {
         warning(paste("Control file not written. Only two item categories", 
-        	"were detected, but partialCredit was specified as TRUE"))
+            "were detected, but partialCredit was specified as TRUE"))
+    }  
+
+    if(length(codes) > 2 & length(anchorFile) > 0){
+        warning(paste("Item structure file may need to be anchored too. Please",
+            "do so manually (i.e., extract ISFile from Winsteps first and ",
+            "manually edit the control file prior to analysis with ISFILE = ",
+            "<filename>",sep = "")) 
     }
+
     if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
-    	partialCredit == TRUE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, ifile, pfile, "GROUPS = 0", sep = "\n"), 
-            	cat(finalDemScript, "&End", sep = "\n"), 
-            	cat(colnames(itms), "END NAMES", sep = "\n")
-            	)
-        	sink()
+           partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, ifile, pfile, "GROUPS = 0", sep = "\n"), 
+                cat(finalDemScript, "&End", sep = "\n"), 
+                cat(colnames(itms), "END NAMES", sep = "\n")
+                )
+            sink()
     }
     if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
-        partialCredit == TRUE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-        				totSc, ifile, "GROUPS = 0", sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
+                        totSc, ifile, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
-        partialCredit == TRUE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, pfile, "GROUPS = 0", sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, pfile, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
-        partialCredit == TRUE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, "GROUPS = 0", sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
-    	partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
-            	cat(finalDemScript, "&End", sep = "\n"), 
-            	cat(colnames(itms), "END NAMES", sep = "\n")
-            	)
-        	sink()
+           partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                cat(finalDemScript, "&End", sep = "\n"), 
+                cat(colnames(itms), "END NAMES", sep = "\n")
+                )
+            sink()
     }
     if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, ifile, "GROUPS = ' ' ", sep = "\n"), 
-            		cat(finalDemScript, "&End", sep = "\n"), 
-            		cat(colnames(itms), "END NAMES", sep = "\n")
-            		)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, ifile, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-        				totSc, pfile, "GROUPS = ' ' ", sep = "\n"), 
-            		cat(finalDemScript, "&End", sep = "\n"), 
-            		cat(colnames(itms), "END NAMES", sep = "\n")
-            		)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
     if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
-        partialCredit == FALSE) {
-        	sink(paste(cntrlTitle, "txt", sep = "."))
-        		cat(
-        			cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-        				totSc, "GROUPS = ' ' ", sep = "\n"), 
-        			cat(finalDemScript, "&End", sep = "\n"), 
-        			cat(colnames(itms), "END NAMES", sep = "\n")
-        			)
-        	sink()
+            partialCredit == FALSE & length(anchorFile) == 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
+                        totSc, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == TRUE & length(codes) == 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, ifile, pfile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == FALSE & length(codes) == 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, ifile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == TRUE & length(codes) == 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, pfile, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == FALSE & length(codes) == 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile,otSc, sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
+           partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, ifile, pfile, "GROUPS = 0", sep = "\n"), 
+                cat(finalDemScript, "&End", sep = "\n"), 
+                cat(colnames(itms), "END NAMES", sep = "\n")
+                )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
+                        totSc, afile, ifile, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, pfile, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, "GROUPS = 0", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
+           partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                cat(finalDemScript, "&End", sep = "\n"), 
+                cat(colnames(itms), "END NAMES", sep = "\n")
+                )
+            sink()
+    }
+    if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, ifile, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
+                        totSc, afile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
+    }
+    if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
+            partialCredit == FALSE & length(anchorFile) > 0) {
+            sink(paste(cntrlTitle, "txt", sep = "."))
+                cat(
+                    cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
+                        totSc, afile, "GROUPS = ' ' ", sep = "\n"), 
+                    cat(finalDemScript, "&End", sep = "\n"), 
+                    cat(colnames(itms), "END NAMES", sep = "\n")
+                    )
+            sink()
     }
 }
