@@ -18,10 +18,22 @@
 r2Winsteps<-function(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt"){
 
 	##### Write Data
-	for(i in 1:ncol(itms)){
-		itms[,i]<-ifelse(is.na(itms[,i]),9,itms[,i])
-	}
 	itms<-apply(itms,2,as.character)
+	for(i in 1:ncol(itms)){
+		itms[,i]<-ifelse(is.na(itms[,i]),"M",itms[,i])
+	}
+	maxWide<-max(apply(itms,2,function(x) nchar(x)))
+
+	for(i in 1:ncol(itms)){
+		itms[,i]<-stringr::str_pad(itms[,i],maxWide, side = "right")
+	}
+
+	dtaCodes<-apply(itms,2,table)
+	codes<-c(names(dtaCodes[[1]]),names(dtaCodes[[2]]))
+	for(i in 3:length(dtaCodes)){
+		codes<-c(codes,names(dtaCodes[[i]]))
+	}
+	codes<-unique(codes)
 
 	istring<-paste(itms[,1],itms[,2],sep = "")
 	for(i in 3:ncol(itms)){
@@ -58,8 +70,8 @@ r2Winsteps<-function(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRU
 	ni<-paste("NI = ",ncol(itms))
 	namStart<-"NAME1 = 1"
 	namLen<-paste("NAMLEN = ",nchar(dstring)[1])
-	wid<-"XWIDE = 1"
-	cod<-"CODES = 01"
+	wid<-paste("XWIDE = ", maxWide, sep = "")
+	cod<-paste("CODES = ", paste(codes, collapse = " "), sep = "")
 	totSc<-"TOTALSCORE = YES"
 	
 	if(format == "XLS"){
