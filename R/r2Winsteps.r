@@ -1,4 +1,4 @@
-#' Write Data and Control Files for Winsteps From R
+#' Write data and control files for Winsteps from R.
 #'
 #' Function for writing files from R to Winsteps for Rasch analysis.
 #'

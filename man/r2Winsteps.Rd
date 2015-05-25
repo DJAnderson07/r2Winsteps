@@ -2,7 +2,7 @@
 % Please edit documentation in R/r2Winsteps.r
 \name{r2Winsteps}
 \alias{r2Winsteps}
-\title{Write Data and Control Files for Winsteps From R}
+\title{Write data and control files for Winsteps from R.}
 \usage{
 r2Winsteps(itms, dems, partialCredit = FALSE, title = "r2Winsteps",
   Ifile = TRUE, Pfile = TRUE, format = "txt")
