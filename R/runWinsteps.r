@@ -5,18 +5,26 @@
 #Add "keep" argument to supress file.remove().
 
 runWinsteps<-function(itms, dems, ...){
-	r2Winsteps(itms, dems, ...)
-	batchWinsteps("r2WinstepsBatch")
+	call<-r2Winsteps(itms, dems, ...)
+	
+	callTitle<-as.list(call)$title
+
+	batchWinsteps(callTitle)
 
 	demNames<-names(dems)
 
-	system(paste("open", "r2WinstepsBatch.bat"))
+	batFile<-paste(callTitle, ".bat", sep = "")
+
+	system(paste("open", batFile))
 
 	repeat{
 		Sys.sleep(.1)
 		
-		if(file.exists("r2WinstepsPfile.txt") == TRUE & 
-		   file.exists("r2WinstepsIfile.txt") == TRUE) 
+		pfileName<-paste(callTitle,"Pfile.txt", sep = "")
+		ifileName<-paste(callTitle,"Ifile.txt", sep = "")
+
+		if(file.exists(pfileName) == TRUE & 
+		   file.exists(ifileName) == TRUE) 
 			
 			break
 		}
@@ -26,6 +34,3 @@ runWinsteps<-function(itms, dems, ...){
 return(list("ItemParameter" = i, "Person Parameters" = p))
 }
 
-
-
-	
