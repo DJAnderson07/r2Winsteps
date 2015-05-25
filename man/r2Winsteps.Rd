@@ -4,19 +4,21 @@
 \alias{r2Winsteps}
 \title{Write Data and Control Files for Winsteps From R}
 \usage{
-r2Winsteps(itms, dems, title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE,
-  format = "txt")
+r2Winsteps(itms, dems, partialCredit = FALSE, title = "r2Winsteps",
+  Ifile = TRUE, Pfile = TRUE, format = "txt")
 }
 \arguments{
 \item{itms}{Dataframe or matrix of items responses}
 
 \item{dems}{Dataframe or matrix of person identifiers/demographic fields}
 
-\item{title}{Title of the analysis, which will be used in the name of the data and text files. Defaults to "r2Winsteps".}
+\item{title}{Title of the analysis, which will be used in the name of the
+data and text files. Defaults to "r2Winsteps".}
 
-\item{format}{Format in which item and person files should be returned. Takes values "txt" and "XLS" to return txt and XLS files,
-respectively. Defaults to "txt". Note that "txt" must be used if subsequent calls to batch.ifile/batch.pfile are used to read the
-files back into R.}
+\item{format}{Format in which item and person files should be returned.
+Takes values "txt" and "XLS" to return txt and XLS files, respectively.
+Defaults to "txt". Note that "txt" must be used if subsequent calls to
+batch.ifile/batch.pfile are used to read thefiles back into R.}
 
 \item{ifile}{Logical, default to TRUE. Should item files be returned?}
 
