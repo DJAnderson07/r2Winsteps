@@ -10,13 +10,19 @@ batchWinsteps(batchName, dir = getwd(), outFileNames = NULL,
 \arguments{
 \item{batchName}{The name of the batch file to be saved.}
 
-\item{dir}{Directory where multiple control files are saved. Defaults to current directory.}
+\item{dir}{Directory where multiple control files are saved. Defaults to
+current directory.}
 
-\item{outFileNames}{Character vector of output file names from Winsteps analyses. Defaults to NULL, and the function creates names based on the names of the control files.}
+\item{outFileNames}{Character vector of output file names from Winsteps
+analyses. Defaults to NULL, and the function creates names based on the
+names of the control files.}
 
-\item{pattern}{Common character pattern represented in control files in the directory. Defaults to "Cntrl", which is what is automatically generated when r2Winsteps is called.}
+\item{pattern}{Common character pattern represented in control files in the
+directory. Defaults to "Cntrl", which is what is automatically generated
+when r2Winsteps is called.}
 }
 \description{
-This function looks at a directory and creates a Winsteps batch processing file based on all the control files in the directory.
+This function looks at a directory and creates a Winsteps batch processing
+  file based on all the control files in the directory.
 }
 
