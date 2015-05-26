@@ -25,7 +25,7 @@
 
 ##### Build in capability for partial credit model
 
-r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL, 
+r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL, 
     title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt"){
 
 #=============================== Write Data file ===============================
@@ -192,7 +192,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
     }
 
     if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
-           partialCredit == FALSE & length(anchorFile) == 0) {
+           partialCredit == TRUE & length(anchorFile) == 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
@@ -203,7 +203,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) == 0) {
+            partialCredit == TRUE & length(anchorFile) == 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
@@ -214,7 +214,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) == 0) {
+            partialCredit == TRUE & length(anchorFile) == 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
@@ -225,7 +225,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) == 0) {
+            partialCredit == TRUE & length(anchorFile) == 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
@@ -324,7 +324,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == TRUE & Pfile == TRUE & length(codes) > 2 & 
-           partialCredit == FALSE & length(anchorFile) > 0) {
+           partialCredit == TRUE & length(anchorFile) > 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
@@ -335,7 +335,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == TRUE & Pfile == FALSE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) > 0) {
+            partialCredit == TRUE & length(anchorFile) > 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
@@ -346,7 +346,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == FALSE & Pfile == TRUE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) > 0) {
+            partialCredit == TRUE & length(anchorFile) > 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
@@ -357,7 +357,7 @@ r2Winsteps<-function (itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink()
     }
     if (Ifile == FALSE & Pfile == FALSE & length(codes) > 2 & 
-            partialCredit == FALSE & length(anchorFile) > 0) {
+            partialCredit == TRUE & length(anchorFile) > 0) {
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
