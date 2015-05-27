@@ -25,16 +25,16 @@
 #' @export
 #' @return Item anchor file for equating scales with common items.
 
-write.anchor<-function(rawItmsDta, eqIfile, anchorFileName = "AnchorFile", 
-	eqIDcol = ncol(eqIfile), eqDiffcol = "Difficulty"){
-	
-	raw<-data.frame(row.names = names(rawItmsDta), 
-		"rawEntry" = 1:ncol(rawItmsDta))
-	eq<-merge(eqIfile,raw, by.x =  eqIDcol, by.y = 0)
-
-	anchor<-eq[,c("rawEntry",as.character(eqDiffcol))]
-	anchor<-anchor[order(anchor$rawEntry),]
-
-	write.table(anchor, file = paste(anchorFileName,".txt",sep = ""),
-		row.names = FALSE, col.names = FALSE)
+write.anchor <- function(rawItmsDta, eqIfile, anchorFileName = "AnchorFile", 
+	eqIDcol = ncol(eqIfile), eqDiffcol = "Difficulty") {
+    
+    raw <- data.frame(row.names = names(rawItmsDta), 
+    	rawEntry = 1:ncol(rawItmsDta))
+    eq <- merge(eqIfile, raw, by.x = eqIDcol, by.y = 0)
+    
+    anchor <- eq[, c("rawEntry", as.character(eqDiffcol))]
+    anchor <- anchor[order(anchor$rawEntry), ]
+    
+    write.table(anchor, file = paste(anchorFileName, ".txt", sep = ""), 
+    	row.names = FALSE, col.names = FALSE)
 }

@@ -13,16 +13,21 @@ batch.ifile(dir = getwd(), pattern = "Ifile", varWidths = c(1, 5, 8, 3, 8,
 \arguments{
 \item{dir}{The directory where the item files are saved.}
 
-\item{pattern}{The common character string in all item files. Defaults to "Ifile", which is what is automatically generated when r2Winsteps is called.}
+\item{pattern}{The common character string in all item files. Defaults to
+"Ifile", which is what is automatically generated when r2Winsteps is
+called.}
 
 \item{varWidths}{Width of ifile variables.}
 
 \item{iFileNames}{Column names for the item files.}
 }
 \value{
-List of Winsteps ifiles, where each element of the list represents a different ifile.
+List of Winsteps ifiles, where each element of the list represents a
+  different ifile.
 }
 \description{
-This function looks at a directory, identifies all the ifiles in the directory based on a common string pattern, and returns a list with all item files (i.e., each element of the list represents a different pfile).
+This function looks at a directory, identifies all the ifiles in the
+  directory based on a common string pattern, and returns a list with all
+  item files (i.e., each element of the list represents a different pfile).
 }
 

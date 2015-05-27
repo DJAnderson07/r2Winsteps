@@ -16,61 +16,56 @@
 #' @return Control and data files for all dataframes/matrices in the given 
 #'   lists, as well as a .bat file to batch process the files in Winsteps.
 
-batch_r2Winsteps<-function(itmsL, demsL, batName = "r2WinstepsBatch", 
-	partialCreditL = NULL, anchorFileL = NULL, titleL = NULL,...){
-
-	#Check for other files with "Cntrl" in the directory
-	if(length(grep("Cntrl",list.files()) > 0)){
-		warning(paste("Other control files detected in the directory.",
-		 "If you are overwriting these files, you can ignore this message.",
-		 "Otherwise, these files will be included in the .bat file and",
-		 "processed by Winsteps."))
-	}
-
-	if(length(itmsL) != length(demsL)){
-		stop(paste("Length of item response list does not equal the length of",
-				"the person demographic list"))
-	}
-	
-	#Make title list, if none is provided
-	if(is.null(titleL)){
-		titleL<-vector("list",length(itmsL))
-		for(i in 1:length(itmsL)){
-			titleL[[i]]<-paste("r2Winsteps",i,sep = "")
-		}
-	}
-
+batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch", 
+	partialCreditL = NULL, anchorFileL = NULL, titleL = NULL, ...) {
+    
+    # Check for other files with 'Cntrl' in the directory
+    if (length(grep("Cntrl", list.files()) > 0)) {
+        warning(paste("Other control files detected in the directory.", 
+        	"If you are overwriting these files, you can ignore this message.", 
+            "Otherwise, these files will be included in the .bat file and", 
+            "processed by Winsteps."))
+    }
+    
+    if (length(itmsL) != length(demsL)) {
+        stop(paste("Length of item response list does not equal the length of", 
+        	"the person demographic list"))
+    }
+    
+    # Make title list, if none is provided
+    if (is.null(titleL)) {
+        titleL <- vector("list", length(itmsL))
+        for (i in 1:length(itmsL)) {
+            titleL[[i]] <- paste("r2Winsteps", i, sep = "")
+        }
+    }
+    
 #----------------- Run specific analysis depending on inputs #------------------
-	if(is.null(partialCreditL) & is.null(anchorFileL)){
-		for(i in 1:length(itmsL)){
-			r2Winsteps(itmsL[[i]], demsL[[i]], 
-				title = titleL[[i]],...)
-		}
-	}
-	if(is.null(partialCreditL) & !is.null(anchorFileL)){
-		for(i in 1:length(itmsL)){
-			r2Winsteps(itmsL[[i]], demsL[[i]], 
-				anchorfile = anchorFileL[[i]],  
-				title = titleL[[i]],...)
-		}
-	}	
-	if(!is.null(partialCreditL) & is.null(anchorFileL)){
-		for(i in 1:length(itmsL)){
-			r2Winsteps(itmsL[[i]], demsL[[i]], 
-				partialCredit = partialCreditL[[i]],
-				title = titleL[[i]],...)
-		}
-	}
-	if(!is.null(partialCreditL) & !is.null(anchorFileL)){
-		for(i in 1:length(itmsL)){
-			r2Winsteps(itmsL[[i]], demsL[[i]], 
-				partialCredit = partialCreditL[[i]],
-				anchorfile = anchorFileL[[i]],
-				title = titleL[[i]],...)
-		}
-	}
-
-#Write .bat file
-batchWinsteps(batName)
-}
-
+    if (is.null(partialCreditL) & is.null(anchorFileL)) {
+        for (i in 1:length(itmsL)) {
+            r2Winsteps(itmsL[[i]], demsL[[i]], title = titleL[[i]], ...)
+        }
+    }
+    if (is.null(partialCreditL) & !is.null(anchorFileL)) {
+        for (i in 1:length(itmsL)) {
+            r2Winsteps(itmsL[[i]], demsL[[i]], anchorfile = anchorFileL[[i]], 
+            	title = titleL[[i]], ...)
+        }
+    }
+    if (!is.null(partialCreditL) & is.null(anchorFileL)) {
+        for (i in 1:length(itmsL)) {
+            r2Winsteps(itmsL[[i]], demsL[[i]], 
+            	partialCredit = partialCreditL[[i]], title = titleL[[i]], ...)
+        }
+    }
+    if (!is.null(partialCreditL) & !is.null(anchorFileL)) {
+        for (i in 1:length(itmsL)) {
+            r2Winsteps(itmsL[[i]], demsL[[i]], 
+            	partialCredit = partialCreditL[[i]], 
+                anchorfile = anchorFileL[[i]], title = titleL[[i]], ...)
+        }
+    }
+    
+    # Write .bat file
+    batchWinsteps(batName)
+} 

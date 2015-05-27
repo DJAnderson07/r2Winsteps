@@ -11,77 +11,83 @@
 #'
 #' @return List of person files, with each element of the lit representing a sererate person file.
 
-batch.pfile<-function(demNameL = NULL, dir = getwd(), pattern = "Pfile", r2WinstepsFile = TRUE){ 
-	
-	oldDir<-getwd()
-	setwd(dir)
-
-	files<-list.files()
-	files<-files[grep(as.character(pattern),files)]
-
-	widthL<-vector("list",length(files))
-	for(i in 1:length(files)){
-		widthL[[i]]<-c(1,5,8,3,8,9,7,7,7,7,7,7,7,7,6,6,1000)
-	}
-	
-	pfile<-vector("list",length(files))
-	for(i in 1:length(files)){
-		pfile[[i]]<-read.fwf(files[[i]], widthL[[i]], skip = 2)
-	}
-
-	if(r2WinstepsFile == TRUE){
-		demFileNames<-paste("demFile",1:length(files),".txt",sep = "")
-
-		for(i in 1:length(files)){
-			cat(as.character(pfile[[i]][,ncol(pfile[[i]])]),sep = "\n",file = demFileNames[i])	
-		}
-		
-		demFiles<-vector("list",length(files))
-		for(i in 1:length(demFiles)){
-			demFiles[[i]]<-read.table(demFileNames[i], sep = "|", quote = "")
-		}
-		invisible(file.remove(demFileNames))
-
-		for(i in 1:length(pfile)){
-			pfile[[i]]<-cbind(pfile[[i]][,-ncol(pfile[[i]])],demFiles[[i]])
-		}
-	}
-	
-	pFileNamesL<-vector("list",length(files))
-
-		if(length(demNameL) > 0){
-			for(i in 1:length(pFileNamesL)){
-				pFileNamesL[[i]]<-c("Dropped", "Entry", "Theta", "Status", "Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", 
-		  			"Outfit_Z", "Displacement", "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch", demNameL[[i]])	
-			}
-		}
-		else{
-			for(i in 1:length(pFileNamesL)){
-				pFileNamesL[[i]]<-c("Dropped", "Entry", "Theta", "Status", "Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", 
-		  			"Outfit_Z", "Displacement", "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch", 
-		  			paste("v",17:ncol(pfile[[i]]), sep = ""))	
-			}
-
-		}
-	
-	if(r2WinstepsFile == TRUE){
-		for(i in 1:length(files)){
-			names(pfile[[i]])<-pFileNamesL[[i]]	
-		}
-	}
-
-	if(r2WinstepsFile == FALSE){
-		for(i in 1:length(pfile)){
-			names(pfile[[i]])<-c(pFileNamesL[[i]][1:(ncol(pfile[[i]]) -1) ],"NAME")
-		}
-	}
-
-	 pfile<-lapply(pfile,function(x){
-		x<-x[,-1]
-	return(x)
-	})
-	names(pfile)<-substr(files,1,(nchar(files)) - 4)
-
-	on.exit(setwd(oldDir), add = TRUE)
-return(pfile)
+batch.pfile <- function(demNameL = NULL, dir = getwd(), pattern = "Pfile", 
+	r2WinstepsFile = TRUE) {
+    
+    oldDir <- getwd()
+    setwd(dir)
+    
+    files <- list.files()
+    files <- files[grep(as.character(pattern), files)]
+    
+    widthL <- vector("list", length(files))
+    for (i in 1:length(files)) {
+        widthL[[i]] <- c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 1000)
+    }
+    
+    pfile <- vector("list", length(files))
+    for (i in 1:length(files)) {
+        pfile[[i]] <- read.fwf(files[[i]], widthL[[i]], skip = 2)
+    }
+    
+    if (r2WinstepsFile == TRUE) {
+        demFileNames <- paste("demFile", 1:length(files), ".txt", sep = "")
+        
+        for (i in 1:length(files)) {
+            cat(as.character(pfile[[i]][, ncol(pfile[[i]])]), sep = "\n", 
+            	file = demFileNames[i])
+        }
+        
+        demFiles <- vector("list", length(files))
+        for (i in 1:length(demFiles)) {
+            demFiles[[i]] <- read.table(demFileNames[i], sep = "|", quote = "")
+        }
+        invisible(file.remove(demFileNames))
+        
+        for (i in 1:length(pfile)) {
+            pfile[[i]] <- cbind(pfile[[i]][, -ncol(pfile[[i]])], demFiles[[i]])
+        }
+    }
+    
+    pFileNamesL <- vector("list", length(files))
+    
+    if (length(demNameL) > 0) {
+        for (i in 1:length(pFileNamesL)) {
+            pFileNamesL[[i]] <- c("Dropped", "Entry", "Theta", "Status", 
+            	"Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", 
+            	"Outfit_Z", "Displacement", "PointMeasureCorr", "Weight", 
+            	"ObservMatch", "ExpectMatch", demNameL[[i]])
+        }
+    } else {
+        for (i in 1:length(pFileNamesL)) {
+            pFileNamesL[[i]] <- c("Dropped", "Entry", "Theta", "Status", 
+            	"Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", 
+            	"Outfit_Z", "Displacement", "PointMeasureCorr", "Weight", 
+            	"ObservMatch", "ExpectMatch", 
+            	paste("v", 17:ncol(pfile[[i]]), sep = ""))
+        }
+        
+    }
+    
+    if (r2WinstepsFile == TRUE) {
+        for (i in 1:length(files)) {
+            names(pfile[[i]]) <- pFileNamesL[[i]]
+        }
+    }
+    
+    if (r2WinstepsFile == FALSE) {
+        for (i in 1:length(pfile)) {
+            names(pfile[[i]]) <- c(pFileNamesL[[i]][1:(ncol(pfile[[i]]) - 1)], 
+            	"NAME")
+        }
+    }
+    
+    pfile <- lapply(pfile, function(x) {
+        x <- x[, -1]
+        return(x)
+    })
+    names(pfile) <- substr(files, 1, (nchar(files)) - 4)
+    
+    on.exit(setwd(oldDir), add = TRUE)
+    return(pfile)
 }

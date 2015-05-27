@@ -12,31 +12,29 @@
 #'   directory. Defaults to "Cntrl", which is what is automatically generated 
 #'   when r2Winsteps is called.
 
-batchWinsteps<-function(batchName, dir = getwd(), outFileNames = NULL, 
-	pattern = "Cntrl"){
-	oldD<-getwd()
-	setwd(dir)
-
-	files<-list.files()
-	files<-files[grep(as.character(pattern),files)]
-
-	if(length(outFileNames) == 0 & pattern == "Cntrl"){
-		outFileNames<-paste(substr(files,1,nchar(files) - 9),"Out",".txt",
-			sep = "")
-	}
-
-	if(length(outFileNames) == 0 & pattern != "Cntrl"){
-		outFileNames<-paste(substr(files,1,nchar(files) - 4),"Out",".txt",
-			sep = "")
-	}
-	
-	first<-rep("START /w C:\\winsteps\\WINSTEPS BATCH=YES ",length(files))
-	
-	sink(paste(batchName,"bat",sep = "."))
-		cat(paste(first, files, outFileNames, sep = " "),
-			"EXIT",
-			sep = "\n")
-	sink()
-
-	on.exit(setwd(oldD), add = TRUE)
-}
+batchWinsteps <- function(batchName, dir = getwd(), outFileNames = NULL, 
+	pattern = "Cntrl") {
+    oldD <- getwd()
+    setwd(dir)
+    
+    files <- list.files()
+    files <- files[grep(as.character(pattern), files)]
+    
+    if (length(outFileNames) == 0 & pattern == "Cntrl") {
+        outFileNames <- paste(substr(files, 1, nchar(files) - 9), "Out", ".txt", 
+            sep = "")
+    }
+    
+    if (length(outFileNames) == 0 & pattern != "Cntrl") {
+        outFileNames <- paste(substr(files, 1, nchar(files) - 4), "Out", ".txt", 
+            sep = "")
+    }
+    
+    first <- rep("START /w C:\\winsteps\\WINSTEPS BATCH=YES ", length(files))
+    
+    sink(paste(batchName, "bat", sep = "."))
+    cat(paste(first, files, outFileNames, sep = " "), "EXIT", sep = "\n")
+    sink()
+    
+    on.exit(setwd(oldD), add = TRUE)
+} 

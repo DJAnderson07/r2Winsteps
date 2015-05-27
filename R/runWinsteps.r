@@ -16,53 +16,52 @@
 #' @return List containing the item and person parameters from the given 
 #'   analysis.
 
-runWinsteps<-function(itms, dems, keep = FALSE, ...){
-
-	call<-r2Winsteps(itms, dems, ...)
-	
-	callTitle<-as.list(call)$title
-
-	#Check for existing files
-	pfileName<-paste(callTitle,"Pfile.txt", sep = "")
-	ifileName<-paste(callTitle,"Ifile.txt", sep = "")
-
-	if(file.exists(pfileName) == TRUE){
-		invisible(file.remove(pfileName))
-		Warning("Previously estimated person file removed.")  
-	} 
-
-	if(file.exists(ifileName) == TRUE){
-		invisible(file.remove(ifileName))		   
-		Warning("Previously estimated item file removed.")
-	}
-
-	batchWinsteps(callTitle)
-
-	demNames<-names(dems)
-
-	batFile<-paste(callTitle, ".bat", sep = "")
-
-	system(paste("open", batFile))
-
-	repeat{
-		Sys.sleep(.1)
-
-		if(file.exists(pfileName) == TRUE & 
-		   file.exists(ifileName) == TRUE) 
-			
-			break
-		}
-
-	p<-batch.pfile(list(demNames))
-	i<-batch.ifile()
-
-	if(keep == FALSE){
-		cntrlFile<-paste(callTitle,"Cntrl.txt",sep = "")
-		dtaFile<-paste(callTitle,"Dta.txt",sep = "")
-		outFile<-paste(callTitle,"Out.txt",sep = "")
-
-		file.remove(c(pfileName, ifileName, batFile, cntrlFile, dtaFile, 
-			outFile))
-	}	
-return(list("ItemParameter" = i, "Person Parameters" = p))
-}
+runWinsteps <- function(itms, dems, keep = FALSE, ...) {
+    
+    call <- r2Winsteps(itms, dems, ...)
+    
+    callTitle <- as.list(call)$title
+    
+    # Check for existing files
+    pfileName <- paste(callTitle, "Pfile.txt", sep = "")
+    ifileName <- paste(callTitle, "Ifile.txt", sep = "")
+    
+    if (file.exists(pfileName) == TRUE) {
+        invisible(file.remove(pfileName))
+        Warning("Previously estimated person file removed.")
+    }
+    
+    if (file.exists(ifileName) == TRUE) {
+        invisible(file.remove(ifileName))
+        Warning("Previously estimated item file removed.")
+    }
+    
+    batchWinsteps(callTitle)
+    
+    demNames <- names(dems)
+    
+    batFile <- paste(callTitle, ".bat", sep = "")
+    
+    system(paste("open", batFile))
+    
+    repeat {
+        Sys.sleep(0.1)
+        
+        if (file.exists(pfileName) == TRUE & file.exists(ifileName) == TRUE) 
+            
+        break
+    }
+    
+    p <- batch.pfile(list(demNames))
+    i <- batch.ifile()
+    
+    if (keep == FALSE) {
+        cntrlFile <- paste(callTitle, "Cntrl.txt", sep = "")
+        dtaFile <- paste(callTitle, "Dta.txt", sep = "")
+        outFile <- paste(callTitle, "Out.txt", sep = "")
+        
+        file.remove(c(pfileName, ifileName, batFile, cntrlFile, dtaFile, 
+        	outFile))
+    }
+    return(list("Item Parameters" = i, "Person Parameters" = p))
+} 
