@@ -5,7 +5,8 @@
 \title{Write data and control files for Winsteps from R.}
 \usage{
 r2Winsteps(itms, dems, partialCredit = FALSE, anchorFile = NULL,
-  title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt")
+  title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt",
+  dec = 2)
 }
 \arguments{
 \item{itms}{Dataframe or matrix of items responses}
@@ -28,6 +29,9 @@ data and text files. Defaults to "r2Winsteps".}
 Takes values "txt" and "XLS" to return txt and XLS files, respectively.
 Defaults to "txt". Note that "txt" must be used if subsequent calls to
 batch.ifile/batch.pfile are used to read thefiles back into R.}
+
+\item{dec}{Number of decimals reported in output. Defaults to 2. Must range
+from 0 to 4.}
 
 \item{ifile}{Logical. Should item files be returned? Defaults to TRUE.}
 

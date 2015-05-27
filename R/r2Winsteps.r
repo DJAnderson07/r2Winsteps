@@ -20,13 +20,15 @@
 #'   Takes values "txt" and "XLS" to return txt and XLS files, respectively. 
 #'   Defaults to "txt". Note that "txt" must be used if subsequent calls to 
 #'   batch.ifile/batch.pfile are used to read thefiles back into R.
+#' @param dec Number of decimals reported in output. Defaults to 2. Must range
+#'   from 0 to 4.
 #' @export
 #' @return Control and Data file for analysis with Winsteps.
 
 ##### Build in capability for partial credit model
 
 r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL, 
-    title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt"){
+    title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt", dec = 2){
 
 #=============================== Write Data file ===============================
 	#Convert itms to character, code missing data as "M"
@@ -102,7 +104,8 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
     wid <- paste("XWIDE = ", maxWide, sep = "")
     cod <- paste("CODES = ", paste(codes, collapse = " "), sep = "")
     totSc <- "TOTALSCORE = YES"
-    afile<-paste("IAFILE = ", anchorFile, sep = "")
+    afile <- paste("IAFILE = ", anchorFile, sep = "")
+    udec <- paste("UDECIMALS = ", dec, sep = "")
 
     if (format == "XLS") {
         ifile <- paste("IFILE = ", paste(title, "Ifile.xls", 
@@ -139,7 +142,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, ifile, pfile, sep = "\n"), 
+                        totSc, udec, ifile, pfile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -150,7 +153,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, ifile, sep = "\n"), 
+                        totSc, udec, ifile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -161,7 +164,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, pfile, sep = "\n"), 
+                        totSc, udec, pfile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -172,7 +175,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, sep = "\n"), 
+                        totSc, udec, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -196,7 +199,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, ifile, pfile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, ifile, pfile, "GROUPS = 0", sep = "\n"), 
                 cat(finalDemScript, "&End", sep = "\n"), 
                 cat(colnames(itms), "END NAMES", sep = "\n")
                 )
@@ -207,7 +210,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-                        totSc, ifile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, ifile, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -218,7 +221,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, pfile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, pfile, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -229,7 +232,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -240,7 +243,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
                 cat(finalDemScript, "&End", sep = "\n"), 
                 cat(colnames(itms), "END NAMES", sep = "\n")
                 )
@@ -251,7 +254,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, ifile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, ifile, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -262,7 +265,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, pfile, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -273,7 +276,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-                        totSc, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -284,7 +287,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, ifile, pfile, sep = "\n"), 
+                        totSc, udec, afile, ifile, pfile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -295,7 +298,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, ifile, sep = "\n"), 
+                        totSc, udec, afile, ifile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -306,7 +309,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, pfile, sep = "\n"), 
+                        totSc, udec, afile, pfile, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -317,7 +320,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile,otSc, sep = "\n"), 
+                        totSc, udec, afile,otSc, sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -328,7 +331,8 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, ifile, pfile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, afile, ifile, pfile, "GROUPS = 0", 
+                        sep = "\n"), 
                 cat(finalDemScript, "&End", sep = "\n"), 
                 cat(colnames(itms), "END NAMES", sep = "\n")
                 )
@@ -339,7 +343,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-                        totSc, afile, ifile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, afile, ifile, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -350,7 +354,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, pfile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, afile, pfile, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -361,7 +365,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, "GROUPS = 0", sep = "\n"), 
+                        totSc, udec, afile, "GROUPS = 0", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -372,7 +376,8 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, ifile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, afile, ifile, pfile, "GROUPS = ' ' ", 
+                        sep = "\n"), 
                 cat(finalDemScript, "&End", sep = "\n"), 
                 cat(colnames(itms), "END NAMES", sep = "\n")
                 )
@@ -383,7 +388,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, ifile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, afile, ifile, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -394,7 +399,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod, 
-                        totSc, afile, pfile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, afile, pfile, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
@@ -405,7 +410,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
             sink(paste(cntrlTitle, "txt", sep = "."))
                 cat(
                     cat("&INST", ttl, dt, i1, ni, namStart, namLen, wid, cod,
-                        totSc, afile, "GROUPS = ' ' ", sep = "\n"), 
+                        totSc, udec, afile, "GROUPS = ' ' ", sep = "\n"), 
                     cat(finalDemScript, "&End", sep = "\n"), 
                     cat(colnames(itms), "END NAMES", sep = "\n")
                     )
