@@ -20,7 +20,8 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     
     call <- r2Winsteps(itms, dems, ...)
     
-    callTitle <- as.list(call)$title
+    callTitle <- ifelse(!is.null(as.list(call)$title), as.list(call)$title, 
+        "r2Winsteps")
     
     # Check for existing files
     pfileName <- paste(callTitle, "Pfile.txt", sep = "")
