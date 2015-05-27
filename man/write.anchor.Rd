@@ -20,8 +20,8 @@ items.}
 \item{anchorFileName}{Name of the anchor file to be written. Defaults to
 "AnchorFile".}
 
-\item{eqIDcol}{The column that item identifiers reside in the item file.
-Defaults to the final column.}
+\item{eqIDcol}{The column name or number in the item file that includes item
+identifiers. Defaults to the final column.}
 
 \item{eqDiffcol}{The column that item difficulties reside in the item file.
 Defaults to "Difficulty", which is the name of the column if r2Winsteps()

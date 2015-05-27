@@ -17,8 +17,8 @@
 #'   items.
 #' @param anchorFileName Name of the anchor file to be written. Defaults to 
 #'   "AnchorFile".
-#' @param eqIDcol The column that item identifiers reside in the item file.
-#'   Defaults to the final column.
+#' @param eqIDcol The column name or number in the item file that includes item 
+#'   identifiers. Defaults to the final column.
 #' @param eqDiffcol The column that item difficulties reside in the item file. 
 #'   Defaults to "Difficulty", which is the name of the column if r2Winsteps()
 #'   was run to produce the ifile.
@@ -28,7 +28,8 @@
 write.anchor<-function(rawItmsDta, eqIfile, anchorFileName = "AnchorFile", 
 	eqIDcol = ncol(eqIfile), eqDiffcol = "Difficulty"){
 	
-	raw<-data.frame(row.names = names(itms), "rawEntry" = 1:ncol(itms))
+	raw<-data.frame(row.names = names(rawItmsDta), 
+		"rawEntry" = 1:ncol(rawItmsDta))
 	eq<-merge(eqIfile,raw, by.x =  eqIDcol, by.y = 0)
 
 	anchor<-eq[,c("rawEntry",as.character(eqDiffcol))]
