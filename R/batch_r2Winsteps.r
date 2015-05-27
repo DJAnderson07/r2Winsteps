@@ -66,7 +66,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
                 anchorfile = anchorFileL[[i]], title = titleL[[i]], ...)
         }
     }
-    
+    ?batchWinsteps
     # Write .bat file
     batchWinsteps(batName)
 return(match.call())
