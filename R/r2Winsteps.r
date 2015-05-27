@@ -25,8 +25,6 @@
 #' @export
 #' @return Control and Data file for analysis with Winsteps.
 
-##### Build in capability for partial credit model
-
 r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL, 
     title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt", dec = 2){
 
