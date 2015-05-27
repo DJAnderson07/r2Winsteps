@@ -24,7 +24,8 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
         warning(paste("Other control files detected in the directory.", 
         	"If you are overwriting these files, you can ignore this message.", 
             "Otherwise, these files will be included in the .bat file and", 
-            "processed by Winsteps."))
+            "processed by Winsteps. Please remove these files from the", 
+            "directory if this is not what you intended."))
     }
     
     if (length(itmsL) != length(demsL)) {
@@ -68,4 +69,5 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
     
     # Write .bat file
     batchWinsteps(batName)
+return(match.call())
 } 
