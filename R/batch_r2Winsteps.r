@@ -49,7 +49,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
     }
     if (is.null(partialCreditL) & !is.null(anchorFileL)) {
         for (i in 1:length(itmsL)) {
-            r2Winsteps(itmsL[[i]], demsL[[i]], anchorfile = anchorFileL[[i]], 
+            r2Winsteps(itmsL[[i]], demsL[[i]], anchorFile = anchorFileL[[i]], 
             	title = titleL[[i]], ...)
         }
     }
@@ -63,7 +63,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
         for (i in 1:length(itmsL)) {
             r2Winsteps(itmsL[[i]], demsL[[i]], 
             	partialCredit = partialCreditL[[i]], 
-                anchorfile = anchorFileL[[i]], title = titleL[[i]], ...)
+                anchorFile = anchorFileL[[i]], title = titleL[[i]], ...)
         }
     }
     ?batchWinsteps
