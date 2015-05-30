@@ -66,8 +66,31 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
                 anchorFile = anchorFileL[[i]], title = titleL[[i]], ...)
         }
     }
-    ?batchWinsteps
-    # Write .bat file
+
+#Return anchor file check if anchorFileL is supplied.
+    if(!is.null(anchorFileL)){
+        cat("The following anchor files were used in the corresponding analyses:",
+            paste("Anchor File", "Analysis Title", sep = " == "), sep = "\n")
+        analysisAnchor<-vector("list", length(itmsL))
+
+        if(is.null(titleL)){
+            for(i in 1:length(analysisAnchor)){
+                analysisAnchor[[i]] <- paste(anchorFileL[[i]],
+                                            paste("r2Winsteps",i, sep = ""),  
+                                        sep = " == ")
+            cat(analysisAnchor[[i]], sep = "\n")
+            }
+        }
+        if(!is.null(titleL)){
+            for(i in 1:length(analysisAnchor)){
+                analysisAnchor[[i]] <- paste(anchorFileL[[i]],
+                                            titleL[[i]], 
+                                        sep = " == ")
+            cat(analysisAnchor[[i]], sep = "\n")
+            }
+        }    
+    }
+
     batchWinsteps(batName)
 return(match.call())
 } 
