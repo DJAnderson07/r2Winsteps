@@ -23,7 +23,59 @@
 
 batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
 
-#Get files ready for analysis
+#---------- Check for previously run analyses & remove i and p files -----------
+#Create name vectors of all files
+    if(!is.null(titleL)){
+        pFileNameV <- rep(NA, length(itmsL))
+        iFileNameV <- rep(NA, length(itmsL))
+        cntrlFileV <- rep(NA, length(itmsL)) # To be used later for keep = FALSE
+        dtaFileV <- rep(NA, length(itmsL))   #
+        outFileV <- rep(NA, length(itmsL))   #
+    
+        for(i in 1:length(itmsL)){
+            pFileNameV[i] <- paste(titleL[i], "Pfile.txt", sep = "")
+            iFileNameV[i] <- paste(titleL[i], "Ifile.txt", sep = "")
+            cntrlFileV[i] <- paste(titleL[i], "Cntrl.txt", sep = "") #
+            dtaFileV[i] <- paste(titleL[i], "Dta.txt", sep = "")     #
+            outFileV[i] <- paste(titleL[i], "Out.txt", sep = "")     #
+        }
+    }
+
+    if(is.null(titleL)){
+        pFileNameV <- rep(NA, length(itmsL))
+        iFileNameV <- rep(NA, length(itmsL))
+        cntrlFileV <- rep(NA, length(itmsL)) #
+        dtaFileV <- rep(NA, length(itmsL))   #
+        outFileV <- rep(NA, length(itmsL))   #
+    
+        for(i in 1:length(itmsL)){
+            pFileNameV[i] <- paste("r2Winsteps", i, "Pfile.txt", sep = "")
+            iFileNameV[i] <- paste("r2Winsteps", i, "Ifile.txt", sep = "")
+            cntrlFileV[i] <- paste("r2Winsteps", i, "Cntrl.txt", sep = "") #
+            dtaFileV[i]   <- paste("r2Winsteps", i, "Dta.txt", sep = "")   #
+            outFileV[i]   <- paste("r2Winsteps", i, "Out.txt", sep = "")   #
+        }
+    }
+    
+    if(any(sapply(iFileNameV, file.exists))) {
+        warning("Previously estimated item file(s) removed.")
+    }
+    for(i in 1:length(iFileNameV)){
+        if (file.exists(iFileNameV[i]) == TRUE) {
+            invisible(file.remove(iFileNameV[i]))
+        }
+    }
+
+    if(any(sapply(pFileNameV, file.exists))) {
+        warning("Previously estimated person file(s) removed.")
+    }
+    for(i in 1:length(pFileNameV)){
+        if (file.exists(pFileNameV[i]) == TRUE) {
+            invisible(file.remove(pFileNameV[i]))
+        }
+    }
+
+#------------------------ Get files ready for analysis -------------------------
     if(is.null(titleL)){
         lastPfileName<-paste("r2Winsteps", length(itmsL), "Pfile.txt", sep = "")
         lastIfileName<-paste("r2Winsteps", length(itmsL), "Ifile.txt", sep = "")
@@ -35,7 +87,7 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
 
     demNamesL <- lapply(demsL, names)
  
- #run analysis   
+ #-------------------------------- run analysis --------------------------------
     call<-batch_r2Winsteps(itmsL, demsL, titleL = titleL, ...)
     batName<-ifelse(is.null(as.list(call)$batName), "r2WinstepsBatch", 
         as.list(call)$batName)
@@ -52,46 +104,15 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
         break
     }
 
-#Import results    
+#------------------------------- Import results --------------------------------
     p <- batch.pfile(demNamesL)
     i <- batch.ifile()
     pars<-list("ItemParameters" = i, "PersonParameters" = p)
 
-#Cleanup    
-    if(!is.null(titleL) & keep == FALSE){
-        pFileNameV <- rep(NA, length(itmsL))
-        iFileNameV <- rep(NA, length(itmsL))
-        cntrlFileV <- rep(NA, length(itmsL))
-        dtaFileV <- rep(NA, length(itmsL))
-        outFileV <- rep(NA, length(itmsL))
-    
-        for(i in 1:length(itmsL)){
-            pFileNameV[i] <- paste(titleL[i], "Pfile.txt", sep = "")
-            iFileNameV[i] <- paste(titleL[i], "Ifile.txt", sep = "")
-            cntrlFileV[i] <- paste(titleL[i], "Cntrl.txt", sep = "")
-            dtaFileV[i] <- paste(titleL[i], "Dta.txt", sep = "")
-            outFileV[i] <- paste(titleL[i], "Out.txt", sep = "")
-        }
-    file.remove(c(pFileNameV, iFileNameV, batFile, cntrlFileV, dtaFileV, 
+#------------------------- Remove files, if requested --------------------------    
+    if(keep == FALSE){
+        file.remove(c(pFileNameV, iFileNameV, batFile, cntrlFileV, dtaFileV, 
             outFileV))
     }
-    if(is.null(titleL) & keep == FALSE){
-        pFileNameV <- rep(NA, length(itmsL))
-        iFileNameV <- rep(NA, length(itmsL))
-        cntrlFileV <- rep(NA, length(itmsL))
-        dtaFileV <- rep(NA, length(itmsL))
-        outFileV <- rep(NA, length(itmsL))
-    
-        for(i in 1:length(itmsL)){
-            pFileNameV[i] <- paste("r2Winsteps", i, "Pfile.txt", sep = "")
-            iFileNameV[i] <- paste("r2Winsteps", i, "Ifile.txt", sep = "")
-            cntrlFileV[i] <- paste("r2Winsteps", i, "Cntrl.txt", sep = "")
-            dtaFileV[i]   <- paste("r2Winsteps", i, "Dta.txt", sep = "")
-            outFileV[i]   <- paste("r2Winsteps", i, "Out.txt", sep = "")
-        }
-    file.remove(c(pFileNameV, iFileNameV, batFile, cntrlFileV, dtaFileV, 
-            outFileV))
-    }
-
-pars
+return(pars)
 } 
