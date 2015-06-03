@@ -4,7 +4,7 @@
 \alias{batchRunWinsteps}
 \title{Run a Rasch model from R using Winsteps.}
 \usage{
-batchRunWinsteps(itmsL, demsL, titleL = NULL, keep = FALSE, ...)
+batchRunWinsteps(itmsL, demsL, titleL = NULL, keep = "none", ...)
 }
 \arguments{
 \item{itmsL}{List of dataframes or matrices of item responses to be analyzed.}
@@ -16,15 +16,14 @@ fields.}
 working directory. Note that this argument is only neccessary if
 \code{keep = TRUE}.}
 
-\item{keep}{Should the external files used to conduct the analysis be stored
-in the working directory? If TRUE, all Winsteps files will be retained,
-including control, data, item, and person files in .txt format, as well as
-the .bat file used to process the data. Defaults to FALSE, in which case
-no files are retained. Alternatively, a character vector of the files to
-retain can be supplied. Possible arguments are \code{c("iFile", "pFile",
-"cntrlFile", "dtaFile", "outFile", "bat")}. These correspond to,
-respectively, item, person, control, data, output, and the .bat (batch
-processing) files.}
+\item{keep}{Character vector of the external Winsteps files to retain.
+Possible arguments are \code{c("all", "none", "iFile", "pFile","cntrlFile",
+"dtaFile", "outFile", "bat")}. If \code{"all"} or \code{"none"} are
+supplied, no other arguments are neccessary. All other arguments can be
+combinded to select a specific set of files to keep. Other arguments
+correspond to, respectively, item, person, control, data, output, and the
+.bat (batch processing) files. Defaults to "none", in which case none of
+the files used to run the analyses are retained.}
 
 \item{...}{Additional arguments passed to \code{\link{batch_r2Winsteps}}.}
 }

@@ -10,15 +10,14 @@
 #' @param titleL Optional list of names for control and datafiles written to the
 #'   working directory. Note that this argument is only neccessary if 
 #'   \code{keep = TRUE}.
-#' @param keep Should the external files used to conduct the analysis be stored 
-#'   in the working directory? If TRUE, all Winsteps files will be retained, 
-#'   including control, data, item, and person files in .txt format, as well as 
-#'   the .bat file used to process the data. Defaults to FALSE, in which case 
-#'   no files are retained. Alternatively, a character vector of the files to 
-#'   retain can be supplied. Possible arguments are \code{c("iFile", "pFile",
-#'   "cntrlFile", "dtaFile", "outFile", "bat")}. These correspond to, 
-#'   respectively, item, person, control, data, output, and the .bat (batch 
-#'   processing) files.
+#' @param keep Character vector of the external Winsteps files to retain. 
+#'   Possible arguments are \code{c("all", "none", "iFile", "pFile","cntrlFile", 
+#'   "dtaFile", "outFile", "bat")}. If \code{"all"} or \code{"none"} are 
+#'   supplied, no other arguments are neccessary. All other arguments can be 
+#'   combinded to select a specific set of files to keep. Other arguments 
+#'   correspond to, respectively, item, person, control, data, output, and the 
+#'   .bat (batch processing) files. Defaults to "none", in which case none of 
+#'   the files used to run the analyses are retained. 
 #' @param ... Additional arguments passed to \code{\link{batch_r2Winsteps}}.
 #' @seealso \code{\link{batch_r2Winsteps}} \code{\link{batchWinsteps}} 
 #'   \code{\link{batch.pfile}} \code{\link{batch.ifile}}
@@ -26,7 +25,7 @@
 #' @return List containing all item and person parameters from the given 
 #'   analyses.
 
-batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
+batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
 
 #---------- Check for previously run analyses & remove i and p files -----------
 #Create name vectors of all files
@@ -118,23 +117,21 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
     pars<-list("ItemParameters" = i, "PersonParameters" = p)
 
 #------------------------- Remove files, if requested --------------------------    
-    if (keep == FALSE) {
-        file.remove(c(iFileNameV, pFileNameV, batFile, cntrlFileV, dtaFileV, 
-            outFileV))
-    if (keep == TRUE) {
-        return(pars)
-    }
-    } else {
-        keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
-                      "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
-                      "outFile" = outFileV, "bat" = batFile)
+    
+    keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
+                  "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
+                  "outFile" = outFileV, "bat" = batFile)
         
-        m <- names(keepL) %in% keep
+    suppressWarnings(
+        if (keep == "all") {
+            keep <- c(rep(TRUE, 6))
+        }
+    )
+    m <- names(keepL) %in% keep
+ 
+    remove <- keepL[!m]
 
-        keepL <- keepL[!m]
-
-        invisible(sapply(keepL, file.remove))
-    }
+    invisible(sapply(remove, file.remove))
 
 return(pars)
 } 
