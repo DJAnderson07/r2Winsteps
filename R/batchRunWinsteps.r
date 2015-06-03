@@ -10,10 +10,15 @@
 #' @param titleL Optional list of names for control and datafiles written to the
 #'   working directory. Note that this argument is only neccessary if 
 #'   \code{keep = TRUE}.
-#' @param keep Logical. Should the external files used to conduct the analysis 
-#'   be stored in the working directory? If TRUE, Winsteps control and data 
-#'   files will be retained, as well as item and person files in .txt format, 
-#'   and the .bat file used to process the data.
+#' @param keep Should the external files used to conduct the analysis be stored 
+#'   in the working directory? If TRUE, all Winsteps files will be retained, 
+#'   including control, data, item, and person files in .txt format, as well as 
+#'   the .bat file used to process the data. Defaults to FALSE, in which case 
+#'   no files are retained. Alternatively, a character vector of the files to 
+#'   retain can be supplied. Possible arguments are \code{c("iFile", "pFile",
+#'   "cntrlFile", "dtaFile", "outFile", "bat")}. These correspond to, 
+#'   respectively, item, person, control, data, output, and the .bat (batch 
+#'   processing) files.
 #' @param ... Additional arguments passed to \code{\link{batch_r2Winsteps}}.
 #' @seealso \code{\link{batch_r2Winsteps}} \code{\link{batchWinsteps}} 
 #'   \code{\link{batch.pfile}} \code{\link{batch.ifile}}
@@ -113,9 +118,23 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
     pars<-list("ItemParameters" = i, "PersonParameters" = p)
 
 #------------------------- Remove files, if requested --------------------------    
-    if(keep == FALSE){
-        file.remove(c(pFileNameV, iFileNameV, batFile, cntrlFileV, dtaFileV, 
+    if (keep == FALSE) {
+        file.remove(c(iFileNameV, pFileNameV, batFile, cntrlFileV, dtaFileV, 
             outFileV))
+    if (keep == TRUE) {
+        return(pars)
     }
+    } else {
+        keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
+                      "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
+                      "outFile" = outFileV, "bat" = batFile)
+        
+        m <- names(keepL) %in% keep
+
+        keepL <- keepL[!m]
+
+        invisible(sapply(keepL, file.remove))
+    }
+
 return(pars)
 } 
