@@ -106,8 +106,10 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
     }
 
 #------------------------------- Import results --------------------------------
-    p <- batch.pfile(demNamesL)
-    i <- batch.ifile()
+    p <- batch.pfile(demNameL = demNamesL, 
+            files = paste(titleL, "Pfile", sep = ""))
+    i <- batch.ifile(files = paste(titleL, "Ifile", sep = ""))
+    
     pars<-list("ItemParameters" = i, "PersonParameters" = p)
 
 #------------------------- Remove files, if requested --------------------------    

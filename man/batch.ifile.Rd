@@ -4,22 +4,29 @@
 \alias{batch.ifile}
 \title{Batch Read Winsteps Item Files (ifile) Into R (Winsteps 3.6.8)}
 \usage{
-batch.ifile(dir = getwd(), pattern = "Ifile", varWidths = c(1, 5, 8, 3, 8,
-  9, 7, 7, 7, 7, 7, 8, 7, 7, 6, 6, 7, 2, 2, 100), iFileNames = c("Dropped",
-  "Entry", "Difficulty", "Status", "Count", "RawScore", "SE", "Infit",
-  "Infit_Z", "Outfit", "Outfit_Z", "Displacement", "PointMeasureCorr", "Weight",
-  "ObservMatch", "ExpectMatch", "PostHocDiscrim", "Group", "Model", "ItemID"))
+batch.ifile(dir = getwd(), pattern = "Ifile", files = NULL,
+  varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 8, 7, 7, 6, 6, 7, 2, 2, 100),
+  iFileNames = c("Dropped", "Entry", "Difficulty", "Status", "Count",
+  "RawScore", "SE", "Infit", "Infit_Z", "Outfit", "Outfit_Z", "Displacement",
+  "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch", "PostHocDiscrim",
+  "Group", "Model", "ItemID"))
 }
 \arguments{
 \item{dir}{The directory where the item files are saved.}
 
-\item{pattern}{The common character string in all item files. Defaults to
-"Ifile", which is what is automatically generated when r2Winsteps is
-called.}
+\item{pattern}{A common character string in all item files. Only used if
+\code{files = NULL}, Defaults to "Ifile", which is what is automatically
+generated when \code{link{r2Winsteps}} is called.}
 
-\item{varWidths}{Width of ifile variables.}
+\item{files}{Optional character vector of the names of the person files to be
+read into R. Note that only the names of the files (not the extension) are
+neccessary. The function assumes .txt files.}
 
-\item{iFileNames}{Column names for the item files.}
+\item{varWidths}{Width of the item file columns. This should only need to be
+modified if you have an older version of Winsteps.}
+
+\item{iFileNames}{The column names for the item files being read in. Note
+that the \code{length(pFileNames)} must equal \code{length(varWidths)}.}
 }
 \value{
 List of Winsteps ifiles, where each element of the list represents a

@@ -91,10 +91,11 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
 #Write .bat file
         if (!is.null(files) & any(grep("Cntrl", list.files()) > length(itmsL))) {
             batchWinsteps(batName, 
-                files = paste(unlist(titleL), "Cntrl", sep = "") )
+                files = paste(unlist(titleL), "Cntrl", sep = ""),
+                outFileNames = paste(titleL, "Out", sep = ""))
     }   else {
         batchWinsteps(batName)
     }
-    
+
 return(match.call())
 } 
