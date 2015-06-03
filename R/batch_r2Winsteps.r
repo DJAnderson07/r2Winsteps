@@ -9,7 +9,6 @@
 #'   be processed.
 #' @param demsL List of dataframes or matrices containing person 
 #'   identifiers/demographic fields.
-
 #' @param ... Additional argument supplied to \code{\link{r2Winsteps}}. Note 
 #'   that any additional arguments must be supplied in the form of a list.
 #' @export
@@ -20,19 +19,17 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
 	partialCreditL = NULL, anchorFileL = NULL, titleL = NULL, ...) {
     
     # Check for other files with 'Cntrl' in the directory
-    if (length(grep("Cntrl", list.files()) > 0)) {
-        warning(paste("Other control files detected in the directory.", 
-        	"If you are overwriting these files, you can ignore this message.", 
-            "Otherwise, these files will be included in the .bat file and", 
-            "processed by Winsteps. Please remove these files from the", 
-            "directory if this is not what you intended."))
+    if (is.null(titleL) & length(grep("Cntrl", list.files() )) > 0) {
+        stop(paste("Other control files in the directory detected.", 
+        	"Please remove these files from the directory or supply argument", 
+            "titleL."))
     }
     
     if (length(itmsL) != length(demsL)) {
         stop(paste("Length of item response list does not equal the length of", 
         	"the person demographic list"))
     }
-    
+
     # Make title list, if none is provided
     if (is.null(titleL)) {
         titleL <- vector("list", length(itmsL))
@@ -91,6 +88,13 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
         }    
     }
 
-    batchWinsteps(batName)
+#Write .bat file
+        if (!is.null(files) & any(grep("Cntrl", list.files()) > length(itmsL))) {
+            batchWinsteps(batName, 
+                files = paste(unlist(titleL), "Cntrl", sep = "") )
+    }   else {
+        batchWinsteps(batName)
+    }
+    
 return(match.call())
 } 

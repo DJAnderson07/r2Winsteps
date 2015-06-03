@@ -154,7 +154,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
         "pfile" = ifelse(exists("pfile"), pfile, ";"),
         "pc" = ifelse(partialCredit == TRUE & length(cod) > 2, "GROUPS = 0",ifelse(
             partialCredit == FALSE & length(cod) > 2, "GROUPS = ' ' ", ";")),
-        "af" = ifelse(!is.null("anchorFile"),afile,";"), 
+        "af" = ifelse(!is.null(anchorFile),afile,";"), 
         finalDemScript, 
         "&End", colnames(itms), "END NAMES")
 

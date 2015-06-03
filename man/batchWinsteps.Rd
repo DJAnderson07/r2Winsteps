@@ -4,11 +4,16 @@
 \alias{batchWinsteps}
 \title{Batch Process Winsteps Files}
 \usage{
-batchWinsteps(batchName, dir = getwd(), outFileNames = NULL,
+batchWinsteps(batchName, files = NULL, dir = getwd(), outFileNames = NULL,
   pattern = "Cntrl")
 }
 \arguments{
 \item{batchName}{The name of the batch file to be saved.}
+
+\item{files}{Optional vector of the names of all Winsteps control files.
+Note that only the name is requred, not the extension (.txt is assumed). If
+argument is not supplied, the function will search the working directory
+files with a common string pattern.}
 
 \item{dir}{Directory where multiple control files are saved. Defaults to
 current directory.}
@@ -19,10 +24,13 @@ names of the control files.}
 
 \item{pattern}{Common character pattern represented in control files in the
 directory. Defaults to "Cntrl", which is what is automatically generated
-when r2Winsteps is called.}
+when r2Winsteps is called. Note that if \code{files} argument is supplied,
+\code{pattern} is ignored.}
 }
 \description{
-This function looks at a directory and creates a Winsteps batch processing
-  file based on all the control files in the directory.
+This function searches the working directory for Winsteps control files and
+  creates a batch processing file based on all the control files in the
+  directory. Alternatively, a vector of control file names can be supplied,
+  from which teh batch processing file is constructed.
 }
 

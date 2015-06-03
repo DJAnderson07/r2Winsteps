@@ -60,6 +60,7 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = FALSE, ...) {
     if(any(sapply(iFileNameV, file.exists))) {
         warning("Previously estimated item file(s) removed.")
     }
+    
     for(i in 1:length(iFileNameV)){
         if (file.exists(iFileNameV[i]) == TRUE) {
             invisible(file.remove(iFileNameV[i]))
