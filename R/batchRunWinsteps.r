@@ -121,10 +121,12 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
     keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
                   "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
                   "outFile" = outFileV, "bat" = batFile)
+
+
         
     suppressWarnings(
         if (keep == "all") {
-            keep <- c(rep(TRUE, 6))
+            keep <- c("iFile", "pFile","cntrlFile", "dtaFile", "outFile", "bat")
         }
     )
     m <- names(keepL) %in% keep
