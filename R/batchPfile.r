@@ -5,9 +5,8 @@
 #'  directory based on a common string pattern, and returns a list with all 
 #'  person files (i.e., each element of the list represents a different pfile).
 #'  Alternatively, a string vector of files to read in can be supplied. Note 
-#'  that this function assumes standard .txt person files from Winsteps have 
-#'  been exported (i.e., the files have not been modified from the standard 
-#'  Winsteps output format).
+#'  that this function assumes standard .txt files. For more information on 
+#'  Winsteps item files, see \url{http://www.winsteps.com/winman/pfile.htm}.
 #'
 #' @param demNameL Optional list containing the names of the demographic 
 #'   variables for pfiles. Must equal the number of demographic fields being 
@@ -23,27 +22,37 @@
 #' @param r2WinstepsFile Logical. Was the \code{link{r2Winsteps}} function 
 #'   called to produce the person files? Defaults to TRUE. Note that if FALSE 
 #'   all demographic variables will be read into a single variable.
-#' @param varWidths Width of the pfile columns. This should only need to be 
-#'   modified if you have an older version of Winsteps. Note that these widths
-#'   correspond to all but the final person demographic columns.
-#' @param pFileNames The column names for the person file being read in. Note 
-#'   that these names correspond to all but the final person demographic 
-#'   columns. Additionally, the \code{length(pFileNames)} must equal 
-#'   \code{length(varWidths)}.
+#' @param varWidths Width of the person file columns. These widths correspond to 
+#'   all but the final person demographic columns. If you are using the current
+#'   version of Winsteps, and have not requested any additional columns be
+#'   represented in the item file, these shouldn't need to be changed. Older 
+#'   versions of Winsteps (e.g., 3.6.8) may need the following widths \code{c(1, 
+#'   5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6)}. Note that the first width 
+#'   of 1 is included to parse comments from item files (e.g., extreme scores). 
+#'   This column is dropped because it is redundant and also represented in the 
+#'   \code{status} column. 
+#' @param pFileNames The column names for the person files being read in. These 
+#'   correspond to the names of all but the person variable names. Note that
+#'   the \code{length(pFileNames)} must equal \code{length(varWidths)}. The
+#'   \code{pFileNames} can be changed for personal preference or to accomodate  
+#'   older versions of Winsteps. For example, version 3.6.8 names might be 
+#'   \code{c("Dropped", "Entry", "Theta", "Status", "Count", "RawScore", "SE", 
+#'   "Infit", "Infit_Z", "Outfit", "Outfit_Z", "Displacement", 
+#'   "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch")}.
 #'
 #' @export
 #'
-#' @return List of person files, with each element of the lit representing a 
+#' @return List of person files, with each element of the list representing a 
 #'   separate person file.
 
 batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL, 
     pattern = "Pfile", r2WinstepsFile = TRUE,  
-    varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6),
-    pFileNames = c("Dropped", "Entry", "Theta", "Status", 
-                "Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", 
-                "Outfit_Z", "Displacement", "PointMeasureCorr", "Weight", 
-                "ObservMatch", "ExpectMatch")) {
-    
+    varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8),
+    pFileNames = c("Dropped", "Entry", "Theta", "Status", "Count", "RawScore", 
+        "SE", "Infit", "Infit_Z", "Outfit", "Outfit_Z", "Displacement", 
+        "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch", 
+        "PointMeasureExpected", "RMSR", "WMLE")) {
+
     oldDir <- getwd()
     setwd(dir)
     
