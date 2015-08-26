@@ -49,7 +49,7 @@ batch.ifile <- function(dir = getwd(), pattern = "Ifile", files = NULL,
     if (!is.null(files)) {
         files <- paste(files, ".txt", sep = "")
     }
-    
+
     if (is.null(files)){
         files <- list.files()
         files <- files[grep(as.character(pattern), files)]
@@ -57,9 +57,10 @@ batch.ifile <- function(dir = getwd(), pattern = "Ifile", files = NULL,
     
     ifiles <- vector("list", length(files))
     for (i in 1:length(ifiles)) {
-        ifiles[[i]] <- read.fwf(files[i], widths = varWidths, skip = 2, col.names = iFileNames)
+        ifiles[[i]] <- read.fwf(files[i], widths = varWidths, skip = 2, 
+            col.names = iFileNames)
     }
-    names(ifiles) <- substr(files, 1, nchar(files) - 4)
+    names(ifiles) <- substr(files, 1, (nchar(files) - 4))
     
     ifiles <- lapply(ifiles, function(x) x[, -1])
     

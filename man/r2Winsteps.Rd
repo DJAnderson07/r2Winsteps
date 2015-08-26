@@ -4,9 +4,9 @@
 \alias{r2Winsteps}
 \title{Write data and control files for Winsteps from R.}
 \usage{
-r2Winsteps(itms, dems, partialCredit = FALSE, anchorFile = NULL,
-  title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt",
-  dec = 2)
+r2Winsteps(itms, dems, partialCredit = FALSE, idelete = NULL,
+  anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps",
+  Ifile = TRUE, Pfile = TRUE, format = "txt", dec = 2)
 }
 \arguments{
 \item{itms}{Dataframe or matrix of items responses}
@@ -19,8 +19,14 @@ and \code{partialCredit} == FALSE, then the control file will be written
 such that Andrich's rating scale model is estimated. If the data include
 only two response options, then partialCredit must be set to FALSE.}
 
+\item{idelete}{Items to remove from the analysis. Should be supplied as a
+vector.}
+
 \item{anchorFile}{Optional name of an anchor file to be included in the
 analysis, see \code{\link{write.anchor}}}
+
+\item{sAnchorFile}{Optional nam of a structure file to be included in the
+analysis when anchoring a partial credit scale.}
 
 \item{title}{Title of the analysis, which will be used in the name of the
 data and text files. Defaults to "r2Winsteps".}

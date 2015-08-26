@@ -12,8 +12,12 @@
 #'   and \code{partialCredit} == FALSE, then the control file will be written 
 #'   such that Andrich's rating scale model is estimated. If the data include
 #'   only two response options, then partialCredit must be set to FALSE.
+#' @param idelete Items to remove from the analysis. Should be supplied as a 
+#'   vector.
 #' @param anchorFile Optional name of an anchor file to be included in the
 #'   analysis, see \code{\link{write.anchor}}
+#' @param sAnchorFile Optional nam of a structure file to be included in the 
+#'   analysis when anchoring a partial credit scale.
 #' @param ifile Logical. Should item files be returned? Defaults to TRUE. 
 #' @param pfile Logical, default to TRUE. Should person files be returned?
 #' @param format Format in which item and person files should be returned. 
@@ -25,8 +29,10 @@
 #' @export
 #' @return Control and Data file for analysis with Winsteps.
 
-r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL, 
-    title = "r2Winsteps", Ifile = TRUE, Pfile = TRUE, format = "txt", dec = 2){
+r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL, 
+    anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps", Ifile = TRUE, 
+    Pfile = TRUE, 
+    format = "txt", dec = 2){
 
 #=============================== Write Data file ===============================
     #Convert itms to character, code missing data as "M"
@@ -104,7 +110,9 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
     wid <- paste("XWIDE = ", maxWide, sep = "")
     cod <- paste("CODES = ", paste(codes, collapse = " "), sep = "")
     totSc <- "TOTALSCORE = YES"
+    idel <- paste("IDELETE = ", paste(idelete, collapse = " "))
     afile <- paste("IAFILE = ", anchorFile, sep = "")
+    sAfile <- paste("SAFILE = ", sAnchorFile, sep = "")
     udec <- paste("UDECIMALS = ", dec, sep = "")
 
     if (format == "XLS") {
@@ -140,12 +148,12 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
     if(partialCredit == TRUE & length(cod) == 2){
         stop("Partial credit model defined for data with only two categries")
     }
-    if(length(codes) > 2 & !is.null(anchorFile)){
-        warning(paste("Item structure file may need to be anchored too. Please",
-            "do so manually (i.e., extract ISFile from Winsteps first and ",
-            "manually edit the control file prior to analysis with ISFILE = ",
-            "<filename>",sep = "")) 
-    } 
+    # if(length(codes) > 2 & !is.null(anchorFile)){
+    #     warning(paste("Item structure file may need to be anchored too. Please",
+    #         "do so manually (i.e., extract ISFile from Winsteps first and ",
+    #         "manually edit the control file prior to analysis with ISFILE = ",
+    #         "<filename>",sep = "")) 
+    # } 
 #================================= Write Files ================================
 
     l<-list("&INST", ttl, dt, i1, ni, 
@@ -154,7 +162,9 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, anchorFile = NULL,
         "pfile" = ifelse(exists("pfile"), pfile, ";"),
         "pc" = ifelse(partialCredit == TRUE & length(cod) > 2, "GROUPS = 0",ifelse(
             partialCredit == FALSE & length(cod) > 2, "GROUPS = ' ' ", ";")),
-        "af" = ifelse(!is.null(anchorFile),afile,";"), 
+        "af" = ifelse(!is.null(anchorFile),afile,";"),
+        "saf" = ifelse(!is.null(sAnchorFile),sAfile,";"),
+        "idel" = ifelse(!is.null(idelete), idel, ";"),
         finalDemScript, 
         "&End", colnames(itms), "END NAMES")
 

@@ -74,12 +74,12 @@ batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL,
     for (i in 1:length(files)) {
         pfile[[i]] <- read.fwf(files[[i]], widthL[[i]], skip = 2)
     }
-    
+ 
     if (r2WinstepsFile == TRUE) {
         demFileNames <- paste("demFile", 1:length(files), ".txt", sep = "")
         
         for (i in 1:length(files)) {
-            cat(as.character(pfile[[i]][, ncol(pfile[[i]])]), sep = "\n", 
+            cat(as.character(pfile[[i]][ ,ncol(pfile[[i]])]), sep = "\n", 
             	file = demFileNames[i])
         }
         
@@ -103,9 +103,9 @@ batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL,
     } else {
         for (i in 1:length(pFileNamesL)) {
             pFileNamesL[[i]] <- c(pFileNames, 
-                                  paste("v", 17:ncol(pfile[[i]]), sep = ""))
+                paste("v",(length(pFileNames) + 1):ncol(pfile[[i]]), sep = ""))
         }
-        
+
     }
     
     if (r2WinstepsFile == TRUE) {
@@ -126,7 +126,7 @@ batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL,
         return(x)
     })
     names(pfile) <- substr(files, 1, (nchar(files)) - 4)
-    
+
     on.exit(setwd(oldDir), add = TRUE)
     return(pfile)
 }

@@ -29,12 +29,12 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     
     if (file.exists(pfileName) == TRUE) {
         invisible(file.remove(pfileName))
-        Warning("Previously estimated person file removed.")
+        warning("Previously estimated person file removed.")
     }
     
     if (file.exists(ifileName) == TRUE) {
         invisible(file.remove(ifileName))
-        Warning("Previously estimated item file removed.")
+        warning("Previously estimated item file removed.")
     }
     
     batchWinsteps(callTitle)
@@ -52,10 +52,10 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
             
         break
     }
-    
+    ?batch.pfile
     p <- batch.pfile(list(demNames))
-    i <- batch.ifile()
-    
+    i <- batch.ifile(pattern = substr(ifileName, 1, (nchar(ifileName) - 3)))
+
     if (keep == FALSE) {
         cntrlFile <- paste(callTitle, "Cntrl.txt", sep = "")
         dtaFile <- paste(callTitle, "Dta.txt", sep = "")
