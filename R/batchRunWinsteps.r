@@ -27,7 +27,7 @@
 
 batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
 
-#---------- Check for previously run analyses & remove i and p files -----------
+#---------- Check for previously run analyses & remove i and p files ----------
 #Create name vectors of all files
     if(!is.null(titleL)){
         pFileNameV <- rep(NA, length(itmsL))
@@ -80,21 +80,23 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
         }
     }
 
-#------------------------ Get files ready for analysis -------------------------
+#------------------------ Get files ready for analysis ------------------------
     if(is.null(titleL)){
-        lastPfileName<-paste("r2Winsteps", length(itmsL), "Pfile.txt", sep = "")
-        lastIfileName<-paste("r2Winsteps", length(itmsL), "Ifile.txt", sep = "")
+        lastPfileName <- paste("r2Winsteps", length(itmsL), "Pfile.txt", 
+            sep = "")
+        lastIfileName <- paste("r2Winsteps", length(itmsL), "Ifile.txt", 
+            sep = "")
     }
     else{
-        lastPfileName<-paste(titleL[length(titleL)], "Pfile.txt", sep = "")
-        lastIfileName<-paste(titleL[length(titleL)], "Ifile.txt", sep = "")   
+        lastPfileName <- paste(titleL[length(titleL)], "Pfile.txt", sep = "")
+        lastIfileName <- paste(titleL[length(titleL)], "Ifile.txt", sep = "")   
     }
 
     demNamesL <- lapply(demsL, names)
  
- #-------------------------------- run analysis --------------------------------
-    call<-batch_r2Winsteps(itmsL, demsL, titleL = titleL, ...)
-    batName<-ifelse(is.null(as.list(call)$batName), "r2WinstepsBatch", 
+ #-------------------------------- run analysis -------------------------------
+    call <- batch_r2Winsteps(itmsL, demsL, titleL = titleL, ...)
+    batName <- ifelse(is.null(as.list(call)$batName), "r2WinstepsBatch", 
         as.list(call)$batName)
     batFile <- paste(batName, ".bat", sep = "")
     
@@ -109,14 +111,14 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
         break
     }
 
-#------------------------------- Import results --------------------------------
+#------------------------------- Import results -------------------------------
     p <- batch.pfile(demNameL = demNamesL, 
-            files = paste(titleL, "Pfile", sep = ""))
-    i <- batch.ifile(files = paste(titleL, "Ifile", sep = ""))
+            files = substr(pFileNameV, 1, nchar(pFileNameV) - 4))
+    i <- batch.ifile(files = substr(iFileNameV, 1, nchar(iFileNameV) - 4))
     
-    pars<-list("ItemParameters" = i, "PersonParameters" = p)
+    pars <- list("ItemParameters" = i, "PersonParameters" = p)
 
-#------------------------- Remove files, if requested --------------------------    
+#----------------------- Remove files, if requested -----------------------    
     
     keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
                   "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
