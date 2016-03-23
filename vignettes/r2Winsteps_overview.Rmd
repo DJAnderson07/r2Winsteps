@@ -74,7 +74,6 @@ wine /Applications/v3.91/WinstepsPasswordInstall3910.exe
 ```
 You will then be taken through the Winsteps installation process, just as you would if you were on a Windows machine (note, you will need your password here). If the above doesn't work, I would recommend looking at the link above. It has the same steps, but is more comprehensive.
 
-
 **One last Note:** Older versions of Winsteps included different (less) output from the item and person files. The *r2Winsteps* package was built with *Winsteps* Version 3.90. If you have an earlier version of Winsteps, there are workarounds you can use in the options of the `read.pfile()` and `read.ifile()` functions, and you may want to consider modifying the source code for your particular installation.
 
 # Using the package: Example 1, LSAT data
