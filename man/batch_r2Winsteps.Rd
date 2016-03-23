@@ -23,8 +23,8 @@ Control and data files for all dataframes/matrices in the given
   lists, as well as a .bat file to batch process the files in Winsteps.
 }
 \description{
-Function takes the typical arguments supplied by \code{\link{r2Winsteps}} in
-  the form of a list, and writes out Winsteps control and data files for each
-  element of the list. See also \code{\link{r2Winsteps}}.
+Function takes the typical arguments supplied by \code{\link{r2Winsteps}}
+ in the form of a list, and writes out Winsteps control and data files for
+ each element of the list. See also \code{\link{r2Winsteps}}.
 }
 

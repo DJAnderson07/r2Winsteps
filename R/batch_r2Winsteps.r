@@ -1,8 +1,8 @@
 #' Write Winsteps control and data files as a batch.
 #'
-#' Function takes the typical arguments supplied by \code{\link{r2Winsteps}} in 
-#'   the form of a list, and writes out Winsteps control and data files for each 
-#'   element of the list. See also \code{\link{r2Winsteps}}.
+#' Function takes the typical arguments supplied by \code{\link{r2Winsteps}}
+#'  in the form of a list, and writes out Winsteps control and data files for 
+#'  each element of the list. See also \code{\link{r2Winsteps}}.
 #'
 #' @param itmsL List of dataframes or matrices containing only the item 
 #'   responses. Each element of the list should contain a seperate dataframe to

@@ -52,7 +52,7 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
             
         break
     }
-    ?batch.pfile
+    
     p <- batch.pfile(list(demNames))
     i <- batch.ifile(pattern = substr(ifileName, 1, (nchar(ifileName) - 3)))
 
