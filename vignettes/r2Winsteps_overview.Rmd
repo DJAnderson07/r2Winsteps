@@ -38,41 +38,22 @@ library(devtools)
 install_github("DJAnderson07/r2Winsteps")
 ```
 
-Winsteps is exclusively designed for Windows, and if you are on a Windows machine you should be good to go from here. However, if you'd like to use a Mac, you can do so through *Wine* (see https://www.winehq.org), a free, open-source "compatibility layer" for running windows programs on OS X. There are several approaches you can take here, including using the Wine Bottler app, which is also free, (http://winebottler.kronenberg.org), and using it's graphic user interface to install *Winsteps*. I have had success with Wine Bottler in the past, but have also run into some issues that are difficult to track down. The most sure fire way to install Wine is through terminal. Complete directions are available here: http://www.davidbaumgold.com/tutorials/wine-mac/ . Briefly, you need to make sure you have Xcode installed, which is a base Mac product available through the app store. Next you'll install Homebrew through terminal by copying and pasting the following code
+Winsteps is exclusively designed for Windows, and if you are on a Windows machine you should be good to go from here. However, if you'd like to use a Mac, you can do so through *Wine* (see https://www.winehq.org), a free, open-source "compatibility layer" for running windows programs on OS X. There are several approaches you can take here. Below, I walk you through what I have found the most successful. First, download and install Wine Bottler, which is also free: http://winebottler.kronenberg.org (be careful not to accidentally download any of the other pop-up software). You'll then need to double click the .dmg file, which will prompt you to drag two apps into  your application folder, as shown below. 
 
-```
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-You'll be asked for your password (although nothing will appear as you type). You may also need to agree to the Xcode license. Run the following code
 
-```
-sudo xcodebuild -license
-```
-then type *agree* and hit enter. 
+At this point, you can try to use Wine Bottler to install *Winsteps* (click on *Advanced*, then *Select File*, navigate to the Winsteps installer (.exe), then click *Open*, then *Install*. Save as *Winsteps*). If this works, you're in great shape. Regardless, you will want the Wine app that comes with Wine Bottler.
 
-Next run
-
-```
-brew tap caskroom/cask
-```
-followed by
-
-```
-brew cask install java xquartz
-```
-
-This may take a few minutes. Finally, you can install wine (which can take quite a while to install, depending on your Internet speed).
-
-```
-brew install wine
-```
-
-Now you should have Wine installed. The last step is to install Winsteps. To do this, first locate the executable installer file (.exe). Then type `wine`, followed by a space, and then drag the executable into terminal. This should copy the path to the executable. For example, it may looks something like the below
+If you get hit with one or more errors when installing with Wine Bottler, I suggest instead installing wine directly with homebrew, as outlined here: http://www.davidbaumgold.com/tutorials/wine-mac/. When you run `brew install wine`, make sure you do not get any errors. If you do, run `brew doctor` and cut and paste the code it suggests. At this point, you should have wine installed. The last step is to install Winsteps. To do this, first locate the executable installer file (.exe). Then type `wine`, followed by a space, and then drag the executable into terminal. This should copy the path to the executable. For example, it may looks something like the below
 
 ```
 wine /Applications/v3.91/WinstepsPasswordInstall3910.exe
 ```
-You will then be taken through the Winsteps installation process, just as you would if you were on a Windows machine (note, you will need your password here). If the above doesn't work, I would recommend looking at the link above. It has the same steps, but is more comprehensive.
+You will then be taken through the Winsteps installation process, just as you would if you were on a Windows machine (note, you will need your password here). If you're still having issues, look closely again at `brew doctor`. If you can't find the answer there, google is your friend.
+
+After installing wine, open a text editor and save the empty file as *temp.bat*. Select the file, and hit command + i. This should open the dialoge box below. 
+
+OPEN ALL .BAT FILES WITH WINE
+
 
 **One last Note:** Older versions of Winsteps included different (less) output from the item and person files. The *r2Winsteps* package was built with *Winsteps* Version 3.90. If you have an earlier version of Winsteps, there are workarounds you can use in the options of the `read.pfile()` and `read.ifile()` functions, and you may want to consider modifying the source code for your particular installation.
 
