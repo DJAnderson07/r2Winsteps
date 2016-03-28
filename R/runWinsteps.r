@@ -64,5 +64,5 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
         file.remove(c(pfileName, ifileName, batFile, cntrlFile, dtaFile, 
         	outFile))
     }
-    return(list("Item Parameters" = i, "Person Parameters" = p))
+    return(list("ItemParameters" = i, "PersonParameters" = p))
 } 
