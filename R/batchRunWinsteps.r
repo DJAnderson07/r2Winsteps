@@ -116,8 +116,12 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
             files = substr(pFileNameV, 1, nchar(pFileNameV) - 4))
     i <- batch.ifile(files = substr(iFileNameV, 1, nchar(iFileNameV) - 4))
     
-    pars <- list("ItemParameters" = i, "PersonParameters" = p)
-
+    if(length(p) == 1 & length(i) == 1) {
+        pars <- list("ItemParameters" = i[[1]], "PersonParameters" = p[[1]])
+    }
+    else {
+        pars <- list("ItemParameters" = i, "PersonParameters" = p)
+    }
 #----------------------- Remove files, if requested -----------------------    
     
     keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
