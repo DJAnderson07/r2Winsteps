@@ -18,8 +18,12 @@
 #'   analysis, see \code{\link{write.anchor}}
 #' @param sAnchorFile Optional nam of a structure file to be included in the 
 #'   analysis when anchoring a partial credit scale.
-#' @param ifile Logical. Should item files be returned? Defaults to TRUE. 
-#' @param pfile Logical, default to TRUE. Should person files be returned?
+#' @param Ifile Logical, defaults to \code{TRUE}. Should the item file be
+#'  returned?
+#' @param Pfile Logical, defaults to \code{TRUE}. Should the person file be
+#'  returned?
+#' @param Sfile Logical, defaults to \code{TRUE} when the data have more than
+#'  two categories. Should the item-structure file be returned?
 #' @param format Format in which item and person files should be returned. 
 #'   Takes values "txt" and "XLS" to return txt and XLS files, respectively. 
 #'   Defaults to "txt". Note that "txt" must be used if subsequent calls to 
@@ -30,11 +34,10 @@
 #' @return Control and Data file for analysis with Winsteps.
 
 r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL, 
-    anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps", Ifile = TRUE, 
-    Pfile = TRUE, 
-    format = "txt", dec = 2){
+    anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps", 
+    Ifile = TRUE, Pfile = TRUE, Sfile = TRUE, format = "txt", dec = 2) {
 
-#=============================== Write Data file ===============================
+#=============================== Write Data file ==============================
     #Convert itms to character, code missing data as "M"
     itms <- apply(itms, 2, as.character)
     for (i in 1:ncol(itms)) {
@@ -99,7 +102,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
         cat(winData, sep = "\n")
     sink()
     
-#============================= Write Control File ==============================
+#============================= Write Control File =============================
     ttl <- paste("TITLE = ", title, sep = "")
     dtaTitle <- paste(as.character(title), "Dta", sep = "")
     dt <- paste("DATA = ", paste(dtaTitle, "txt", sep = "."))
@@ -146,7 +149,7 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
     
     #Warnings/erros
     if(partialCredit == TRUE & length(cod) == 2){
-        stop("Partial credit model defined for data with only two categries")
+        stop("Partial credit model defined for data with only two categories")
     }
     # if(length(codes) > 2 & !is.null(anchorFile)){
     #     warning(paste("Item structure file may need to be anchored too. Please",
@@ -160,8 +163,10 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
         namStart, namLen, wid, cod, totSc, udec, 
         "ifile" = ifelse(exists("ifile"), ifile, ";"), 
         "pfile" = ifelse(exists("pfile"), pfile, ";"),
-        "pc" = ifelse(partialCredit == TRUE & length(cod) > 2, "GROUPS = 0",ifelse(
-            partialCredit == FALSE & length(cod) > 2, "GROUPS = ' ' ", ";")),
+        "sfile" = ifelse(Sfile == TRUE & length(codes) > 2, 
+            paste("SFILE = ", paste(title, "Sfile.txt", sep = ""), ";")),
+        "pc" = ifelse(length(codes) > 2, "GROUPS = 0",ifelse(
+            partialCredit == FALSE & length(codes) > 2, "GROUPS = ' ' ", ";")),
         "af" = ifelse(!is.null(anchorFile),afile,";"),
         "saf" = ifelse(!is.null(sAnchorFile),sAfile,";"),
         "idel" = ifelse(!is.null(idelete), idel, ";"),
