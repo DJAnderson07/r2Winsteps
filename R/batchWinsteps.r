@@ -25,7 +25,7 @@ batchWinsteps <- function(batchName, files = NULL, dir = getwd(),
     oldD <- getwd()
     setwd(dir)
 
-#-------------------------------- Define files ---------------------------------
+#-------------------------------- Define files --------------------------------
     if (!is.null(files)) {
         files <- paste(files, ".txt", sep = "")
     }
@@ -34,7 +34,7 @@ batchWinsteps <- function(batchName, files = NULL, dir = getwd(),
         files <- list.files()
         files <- files[grep(as.character(pattern), files)]
     }
-#---------------------------- Define Outifle Names -----------------------------    
+#------------------------- Define Outifle Names ---------------------------    
     if(!is.null(outFileNames)) {
         outFileNames <- paste(outFileNames, ".txt", sep = "")
     }
@@ -48,7 +48,7 @@ batchWinsteps <- function(batchName, files = NULL, dir = getwd(),
         outFileNames <- paste(substr(files, 1, nchar(files) - 4), "Out", ".txt", 
             sep = "")
     }
-#------------------------------- Write .bat File -------------------------------
+#------------------------------- Write .bat File ------------------------------
     first <- rep("START /w C:\\winsteps\\WINSTEPS BATCH=YES ", length(files))
     
     sink(paste(batchName, "bat", sep = "."))
