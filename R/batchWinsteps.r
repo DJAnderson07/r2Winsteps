@@ -54,6 +54,6 @@ batchWinsteps <- function(batchName, files = NULL, dir = getwd(),
     sink(paste(batchName, "bat", sep = "."))
     cat(paste(first, files, outFileNames, sep = " "), "EXIT", sep = "\n")
     sink()
-#-------------------------------------------------------------------------------    
+#------------------------------------------------------------------------------    
     on.exit(setwd(oldD), add = TRUE)
 } 
