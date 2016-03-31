@@ -26,6 +26,7 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     # Check for existing files
     pfileName <- paste(callTitle, "Pfile.txt", sep = "")
     ifileName <- paste(callTitle, "Ifile.txt", sep = "")
+    sfileName <- paste(callTitle, "Sfile.txt", sep = "")
     
     if (file.exists(pfileName) == TRUE) {
         invisible(file.remove(pfileName))
@@ -36,6 +37,11 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
         invisible(file.remove(ifileName))
         warning("Previously estimated item file removed.")
     }
+    if (file.exists(sfileName) == TRUE) {
+        invisible(file.remove(sfileName))
+        warning("Previously estimated structure file removed.")
+    }
+
     
     batchWinsteps(callTitle)
     
@@ -54,17 +60,37 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     }
     
     p <- batch.pfile(list(demNames))
-    i <- batch.ifile(pattern = substr(ifileName, 1, (nchar(ifileName) - 3)))
-
+    i <- batch.ifile(pat = substr(ifileName, 1, (nchar(ifileName) - 3)))
+    if(file.exists(sfileName)) {
+        s <- batch.sfile(pat = substr(sfileName, 1, (nchar(sfileName) - 3)))
+    }
     if (keep == FALSE) {
         cntrlFile <- paste(callTitle, "Cntrl.txt", sep = "")
         dtaFile <- paste(callTitle, "Dta.txt", sep = "")
         outFile <- paste(callTitle, "Out.txt", sep = "")
+        if(exists("s")) {
+            file.remove(c(pfileName, ifileName, sfileName, batFile, 
+            cntrlFile, dtaFile, outFile))
+        }
+        else{
+            file.remove(c(pfileName, ifileName, batFile, 
+            cntrlFile, dtaFile, outFile))
+        }    
         
-        file.remove(c(pfileName, ifileName, batFile, cntrlFile, dtaFile, 
-        	outFile))
     }
     
-    
-    return(list("ItemParameters" = i[[1]], "PersonParameters" = p[[1]]))
+    if(exists("s")) {
+        return(structure(
+                list("ItemParameters" = i[[1]], 
+                     "PersonParameters" = p[[1]],
+                     "StructureFiles" = s[[1]]), 
+            class = "r2Winsteps"))
+    }
+    else {
+        return(structure(
+                list("ItemParameters" = i[[1]], 
+                     "PersonParameters" = p[[1]]), 
+            class = "r2Winsteps"))
+    }
+
 } 

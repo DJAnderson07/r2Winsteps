@@ -1,4 +1,4 @@
-#' Batch Read Winsteps Item Files (ifile) Into R (Winsteps 3.6.8)
+#' Batch Read Winsteps Item Files (ifile) Into R 
 #'
 #' This function looks at a directory, identifies all the ifiles in the 
 #'   directory based on a common string pattern, and returns a list with all 
@@ -8,7 +8,7 @@
 #'   \url{http://www.winsteps.com/winman/ifile.htm}.
 #'
 #' @param dir The directory where the item files are saved.
-#' @param pattern A common character string in all item files. Only used if 
+#' @param pat A common character string in all item files. Only used if 
 #'   \code{files = NULL}, Defaults to "Ifile", which is what is automatically 
 #'   generated when \code{link{r2Winsteps}} is called.
 #' @param files Optional character vector of the names of the item files to be
@@ -23,7 +23,7 @@
 #'   extreme scores). This column is dropped because it is redundant and also 
 #'   represented in the \code{status} column.
 #' @param iFileNames The column names for the item files being read in. Note 
-#'   that the \code{length(pFileNames)} must equal \code{length(varWidths)}.
+#'   that the \code{length(iFileNames)} must equal \code{length(varWidths)}.
 #'   iFileNames can be changed for personal preference and to accomodate older 
 #'   versions of Winsteps. For example, version 3.6.8 names might be 
 #'   \code{c("Dropped", "Entry", "Difficulty", "Status", "Count", "RawScore", 
@@ -31,10 +31,10 @@
 #'   "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch", 
 #'   "PostHocDiscrim", "Group", "Model", "ItemID")}.
 #' @export
-#' @return List of Winsteps ifiles, where each element of the list represents a 
-#'   different ifile.
+#' @return List of Winsteps ifiles, where each element of the list represents
+#'  a different ifile.
 
-batch.ifile <- function(dir = getwd(), pattern = "Ifile", files = NULL, 
+batch.ifile <- function(dir = getwd(), pat = "Ifile", files = NULL, 
 	varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8, 2, 2, 
         2, 100),
 	iFileNames = c("Dropped", "Entry", "Difficulty", "Status", "Count", 
@@ -51,8 +51,7 @@ batch.ifile <- function(dir = getwd(), pattern = "Ifile", files = NULL,
     }
 
     if (is.null(files)){
-        files <- list.files()
-        files <- files[grep(as.character(pattern), files)]
+        files <- list.files(pattern = pat)
     }
     
     ifiles <- vector("list", length(files))

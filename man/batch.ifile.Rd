@@ -2,11 +2,11 @@
 % Please edit documentation in R/batchIfile.r
 \name{batch.ifile}
 \alias{batch.ifile}
-\title{Batch Read Winsteps Item Files (ifile) Into R (Winsteps 3.6.8)}
+\title{Batch Read Winsteps Item Files (ifile) Into R}
 \usage{
-batch.ifile(dir = getwd(), pattern = "Ifile", files = NULL,
-  varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8, 2, 2,
-  2, 100), iFileNames = c("Dropped", "Entry", "Difficulty", "Status", "Count",
+batch.ifile(dir = getwd(), pat = "Ifile", files = NULL, varWidths = c(1,
+  5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8, 2, 2, 2, 100),
+  iFileNames = c("Dropped", "Entry", "Difficulty", "Status", "Count",
   "RawScore", "SE", "Infit", "Infit_Z", "Outfit", "Outfit_Z", "Displacement",
   "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch",
   "PointMeasureExpected", "RMSR", "WMLE", "Group", "Model", "Recoding",
@@ -15,7 +15,7 @@ batch.ifile(dir = getwd(), pattern = "Ifile", files = NULL,
 \arguments{
 \item{dir}{The directory where the item files are saved.}
 
-\item{pattern}{A common character string in all item files. Only used if
+\item{pat}{A common character string in all item files. Only used if
 \code{files = NULL}, Defaults to "Ifile", which is what is automatically
 generated when \code{link{r2Winsteps}} is called.}
 
@@ -33,7 +33,7 @@ extreme scores). This column is dropped because it is redundant and also
 represented in the \code{status} column.}
 
 \item{iFileNames}{The column names for the item files being read in. Note
-that the \code{length(pFileNames)} must equal \code{length(varWidths)}.
+that the \code{length(iFileNames)} must equal \code{length(varWidths)}.
 iFileNames can be changed for personal preference and to accomodate older
 versions of Winsteps. For example, version 3.6.8 names might be
 \code{c("Dropped", "Entry", "Difficulty", "Status", "Count", "RawScore",
@@ -42,8 +42,8 @@ versions of Winsteps. For example, version 3.6.8 names might be
 "PostHocDiscrim", "Group", "Model", "ItemID")}.}
 }
 \value{
-List of Winsteps ifiles, where each element of the list represents a
-  different ifile.
+List of Winsteps ifiles, where each element of the list represents
+ a different ifile.
 }
 \description{
 This function looks at a directory, identifies all the ifiles in the

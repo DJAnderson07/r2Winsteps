@@ -13,8 +13,7 @@ batchRunWinsteps(itmsL, demsL, titleL = NULL, keep = "none", ...)
 fields.}
 
 \item{titleL}{Optional list of names for control and datafiles written to the
-working directory. Note that this argument is only neccessary if
-\code{keep = TRUE}.}
+working directory.}
 
 \item{keep}{Character vector of the external Winsteps files to retain.
 Possible arguments are \code{c("all", "none", "iFile", "pFile","cntrlFile",

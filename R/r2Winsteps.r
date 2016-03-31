@@ -44,14 +44,14 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
         itms[, i] <- ifelse(is.na(itms[, i]), "M", itms[, i])
     }
     
-    #Find the column with the maximium width
+    #Find the column with the maximum width
     maxWide <- max(apply(itms, 2, function(x) nchar(x)))
     
     #Pad all items to equal the max width
     for (i in 1:ncol(itms)) {
         itms[, i] <- stringr::str_pad(itms[, i], maxWide, side = "right")
     }
-    
+
     #Extract codes in data
     dtaCodes <- apply(itms, 2, table)
     if (class(dtaCodes) == "matrix") {
@@ -164,9 +164,10 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
         "ifile" = ifelse(exists("ifile"), ifile, ";"), 
         "pfile" = ifelse(exists("pfile"), pfile, ";"),
         "sfile" = ifelse(Sfile == TRUE & length(codes) > 2, 
-            paste("SFILE = ", paste(title, "Sfile.txt", sep = ""), ";")),
-        "pc" = ifelse(length(codes) > 2, "GROUPS = 0",ifelse(
-            partialCredit == FALSE & length(codes) > 2, "GROUPS = ' ' ", ";")),
+            paste("SFILE = ", paste(title, "Sfile.txt", sep = "")), ";"),
+        "pc" = ifelse(partialCredit == TRUE & length(codes) > 2, "GROUPS = 0",
+            ifelse(partialCredit == FALSE & length(codes) > 2, 
+                "GROUPS = ' ' ", ";")),
         "af" = ifelse(!is.null(anchorFile),afile,";"),
         "saf" = ifelse(!is.null(sAnchorFile),sAfile,";"),
         "idel" = ifelse(!is.null(idelete), idel, ";"),

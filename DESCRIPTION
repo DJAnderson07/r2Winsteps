@@ -1,5 +1,5 @@
 Package: r2Winsteps
-Title: Write and Read Winsteps Files From R
+Title: A package for interfacing between R and the Rasch modeling software Winsteps
 Version: 0.0.0.9000
 Authors@R: person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre"))
 Description: The `r2Winsteps` package was developed to provide a convenient interface

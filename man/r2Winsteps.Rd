@@ -6,7 +6,7 @@
 \usage{
 r2Winsteps(itms, dems, partialCredit = FALSE, idelete = NULL,
   anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps",
-  Ifile = TRUE, Pfile = TRUE, format = "txt", dec = 2)
+  Ifile = TRUE, Pfile = TRUE, Sfile = TRUE, format = "txt", dec = 2)
 }
 \arguments{
 \item{itms}{Dataframe or matrix of items responses}
@@ -31,6 +31,15 @@ analysis when anchoring a partial credit scale.}
 \item{title}{Title of the analysis, which will be used in the name of the
 data and text files. Defaults to "r2Winsteps".}
 
+\item{Ifile}{Logical, defaults to \code{TRUE}. Should the item file be
+returned?}
+
+\item{Pfile}{Logical, defaults to \code{TRUE}. Should the person file be
+returned?}
+
+\item{Sfile}{Logical, defaults to \code{TRUE} when the data have more than
+two categories. Should the item-structure file be returned?}
+
 \item{format}{Format in which item and person files should be returned.
 Takes values "txt" and "XLS" to return txt and XLS files, respectively.
 Defaults to "txt". Note that "txt" must be used if subsequent calls to
@@ -38,10 +47,6 @@ batch.ifile/batch.pfile are used to read thefiles back into R.}
 
 \item{dec}{Number of decimals reported in output. Defaults to 2. Must range
 from 0 to 4.}
-
-\item{ifile}{Logical. Should item files be returned? Defaults to TRUE.}
-
-\item{pfile}{Logical, default to TRUE. Should person files be returned?}
 }
 \value{
 Control and Data file for analysis with Winsteps.

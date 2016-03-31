@@ -8,8 +8,7 @@
 #' @param demsL List of dataframes or matrices of person identifiers/demographic 
 #'   fields.
 #' @param titleL Optional list of names for control and datafiles written to the
-#'   working directory. Note that this argument is only neccessary if 
-#'   \code{keep = TRUE}.
+#'   working directory. 
 #' @param keep Character vector of the external Winsteps files to retain. 
 #'   Possible arguments are \code{c("all", "none", "iFile", "pFile","cntrlFile", 
 #'   "dtaFile", "outFile", "bat")}. If \code{"all"} or \code{"none"} are 
@@ -32,13 +31,15 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
     if(!is.null(titleL)){
         pFileNameV <- rep(NA, length(itmsL))
         iFileNameV <- rep(NA, length(itmsL))
-        cntrlFileV <- rep(NA, length(itmsL)) # To be used later for keep = FALSE
+        sFileNameV <- rep(NA, length(itmsL))
+        cntrlFileV <- rep(NA, length(itmsL)) # used later for keep = FALSE
         dtaFileV <- rep(NA, length(itmsL))   #
         outFileV <- rep(NA, length(itmsL))   #
     
         for(i in 1:length(itmsL)){
             pFileNameV[i] <- paste(titleL[i], "Pfile.txt", sep = "")
             iFileNameV[i] <- paste(titleL[i], "Ifile.txt", sep = "")
+            sFileNameV[i] <- paste(titleL[i], "Sfile.txt", sep = "")
             cntrlFileV[i] <- paste(titleL[i], "Cntrl.txt", sep = "") #
             dtaFileV[i] <- paste(titleL[i], "Dta.txt", sep = "")     #
             outFileV[i] <- paste(titleL[i], "Out.txt", sep = "")     #
@@ -48,6 +49,7 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
     if(is.null(titleL)){
         pFileNameV <- rep(NA, length(itmsL))
         iFileNameV <- rep(NA, length(itmsL))
+        sFileNameV <- rep(NA, length(itmsL))
         cntrlFileV <- rep(NA, length(itmsL)) #
         dtaFileV <- rep(NA, length(itmsL))   #
         outFileV <- rep(NA, length(itmsL))   #
@@ -55,6 +57,7 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
         for(i in 1:length(itmsL)){
             pFileNameV[i] <- paste("r2Winsteps", i, "Pfile.txt", sep = "")
             iFileNameV[i] <- paste("r2Winsteps", i, "Ifile.txt", sep = "")
+            sFileNameV[i] <- paste("r2Winsteps", i, "Sfile.txt", sep = "")
             cntrlFileV[i] <- paste("r2Winsteps", i, "Cntrl.txt", sep = "") #
             dtaFileV[i]   <- paste("r2Winsteps", i, "Dta.txt", sep = "")   #
             outFileV[i]   <- paste("r2Winsteps", i, "Out.txt", sep = "")   #
@@ -80,16 +83,30 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
         }
     }
 
+    if(any(sapply(sFileNameV, file.exists))) {
+        warning("Previously estimated structure file(s) removed.")
+    }
+    
+    for(i in 1:length(sFileNameV)){
+        if (file.exists(sFileNameV[i]) == TRUE) {
+            invisible(file.remove(sFileNameV[i]))
+        }
+    }
+
+
 #------------------------ Get files ready for analysis ------------------------
     if(is.null(titleL)){
         lastPfileName <- paste("r2Winsteps", length(itmsL), "Pfile.txt", 
             sep = "")
         lastIfileName <- paste("r2Winsteps", length(itmsL), "Ifile.txt", 
             sep = "")
+        lastSfileName <- paste("r2Winsteps", length(itmsL), "Sfile.txt", 
+            sep = "")
     }
     else{
         lastPfileName <- paste(titleL[length(titleL)], "Pfile.txt", sep = "")
-        lastIfileName <- paste(titleL[length(titleL)], "Ifile.txt", sep = "")   
+        lastIfileName <- paste(titleL[length(titleL)], "Ifile.txt", sep = "")
+        lastSfileName <- paste(titleL[length(titleL)], "Sfile.txt", sep = "")  
     }
 
     demNamesL <- lapply(demsL, names)
@@ -106,7 +123,8 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
         Sys.sleep(0.1)
         
         if (file.exists(lastPfileName) == TRUE & 
-            file.exists(lastIfileName) == TRUE) 
+            file.exists(lastIfileName) == TRUE &
+            file.exists(lastSfileName) == TRUE) 
             
         break
     }
@@ -115,24 +133,28 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
     p <- batch.pfile(demNameL = demNamesL, 
             files = substr(pFileNameV, 1, nchar(pFileNameV) - 4))
     i <- batch.ifile(files = substr(iFileNameV, 1, nchar(iFileNameV) - 4))
+    s <- batch.sfile(files = substr(sFileNameV, 1, nchar(sFileNameV) - 4))
     
-    if(length(p) == 1 & length(i) == 1) {
-        pars <- list("ItemParameters" = i[[1]], "PersonParameters" = p[[1]])
+    if(length(p) == 1 & length(i) == 1 & length(s) == 1) {
+        pars <- list("ItemParameters" = i[[1]], 
+                     "PersonParameters" = p[[1]],
+                     "StructureFiles" = s[[1]])
     }
     else {
-        pars <- list("ItemParameters" = i, "PersonParameters" = p)
+        pars <- list("ItemParameters" = i, 
+                     "PersonParameters" = p, 
+                     "StructureFiles" = s)
     }
 #----------------------- Remove files, if requested -----------------------    
     
     keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
-                  "cntrlFile" = cntrlFileV, "dtaFile" = dtaFileV, 
-                  "outFile" = outFileV, "bat" = batFile)
-
-
-        
+                  "sFile" = sFileNameV, "cntrlFile" = cntrlFileV, 
+                  "dtaFile" = dtaFileV, "outFile" = outFileV, "bat" = batFile)
+     
     suppressWarnings(
         if (keep == "all") {
-            keep <- c("iFile", "pFile","cntrlFile", "dtaFile", "outFile", "bat")
+            keep <- c("iFile", "pFile", "sfile", "cntrlFile", "dtaFile", 
+                      "outFile", "bat")
         }
     )
     m <- names(keepL) %in% keep

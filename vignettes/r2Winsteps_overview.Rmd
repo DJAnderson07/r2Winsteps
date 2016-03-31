@@ -10,30 +10,49 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The `r2Winsteps` package was developed to provide a convenient interface
+The *r2Winsteps* package was developed to provide a convenient interface
   between *R* and the Rasch modeling software *Winsteps*. The package is not
   intended to encompass the full capabilities of *Winsteps*, but rather to
   provide a simple framework for estimating many commonly applied models. The
   primary features of the package include:
 
 * Write control and data files for Winsteps with the `r2Winsteps()` function,
-  which includes automatic detection of partial credit scoring. For partial
-  credit scoring, either the rating scale [default; @Andrich] or partial credit
-  models [@Masters] can be estimated.
+  which includes automatic detection of polytomous item types. Either the
+  rating scale [default; @Andrich] or partial credit models [@Masters] can be
+  estimated.
 * Run Winsteps directly from R with the `runWinsteps()` function, which writes
-  and executes a `.bat` file to call *Winsteps*. Both item and person
-  parameters are returned in a list, and intermediary files (control and data)
-  can be stored or discarded (default).
+  and executes a `.bat` file to call *Winsteps*. Item, person, and structure
+  (if a polytmous model is estimated) parameters are returned in a list.
+  Intermediary files (control, data, output, etc.) can be stored or discarded
+  (default).
 * Batch run a set of models with the `batchRunWinsteps()` files. Essentially
-  does the same thing as `runWinsteps()`, but takes as its argument a list of
+  calls `runWinsteps()`, but takes as its argument a list of
   data frames, with a different model fit and parameter estimates returned for
   each data frame in the list.
 
-Note that the package is still in development, and plotting features are next
-  on the docket for inclusion. For now, any plotting you'd like to do will
-  either need to be completed manually after running the models, or through
-  Winsteps directly. The purpose of this vignette is to provide a few
-  illustrated examples of using the package.
+There were three primary motivation for developing *r2Winsteps*. First, 
+  *Winsteps* is a powerful software that can fit a range of Rasch models with impressive speed. By linking the software to *R*, and unified framework is provided where users can prep, explore, and analyze their data within the same environment. This is important not only for convenience and efficiency purposes, but also to facilitate transparency. When multiple software packages are used, and multiple script files stored, it can be easy for an outside researcher (or indeed, the same researcher at a later time) to get lost in the process used. This is also an important principle of reproducible research [@Stodden], and can facilitate dynamic document generation [@Xie] with Winsteps, where all tables and figures are generated in a report are generated dynamically. That is, as the model or data are updated, so too are the features within the document that depend on them. This document is an example of using *Winsteps* within *R* to generate a reproducible and dynamic document, via the *r2Winsteps* package (although in practice, most documents would include the code being hidden).
+
+The second primary motivation for developing *r2Winsteps* was the powerful
+  plotting capabilities in *R*, coupled with tremendous flexibility. *Winsteps*
+  provides many excellent plots, available through the graphs menu, but they
+  are limited in that the user has little control over their appearance (e.g.,
+  line types, colors, etc.). By contrast, *R* provides almost limitless
+  flexibility, and multiple packages are available for facilitating plot
+  creation (e.g., ggplot2 [@Hadley], lattice [@sarker]). The built-in plotting
+  function in the *r2Winsteps* package are still under active development.
+  These were all created with the base graphics, and should be fully
+  customizable.
+
+The third and final primary motivation for developing *r2Winsteps* was to develop an efficient method for batch processing analyses with *Winsteps*. While a batch processing option is available through *Winsteps*, one still must write each control and data file for each analysis. The *r2Winsteps* package allows for an efficient means of batch writing control and data files for analysis, which can then be estimated through *Winsteps* batch mode.
+
+Note that the package is still in active development, and this vignette will be
+  updated over time accordingly. The purpose of this vignette is to provide a
+  few illustrated examples of using the package in its current stage. If you use the package, please reference it using the code below. If you find any bugs, please email them to daniela@uoregon.edu, or log them at https://github.com/DJAnderson07/r2Winsteps/issues.
+
+```{r, reference}
+citation(package = "r2Winsteps")
+```
 
 # Installation
 For the time being, the *r2Winsteps* package is housed exclusively on *github*.
@@ -107,7 +126,28 @@ demographics.
 
 ```{r, LSAT_mod1}
 pars_LSAT <- runWinsteps(LSAT[ ,4:8], LSAT[ ,1:3])
+
+itms <- LSAT[ ,4:8]
+dems <- LSAT[ ,1:3]
+
 str(pars_LSAT)
+plot(pars_LSAT, "TIF/IIF")
+pars_ordered$ItemParameters
+batch.pfile()
+
+# START HERE
+
+d <- read.csv("/Users/Daniel/Desktop/Ordered.csv")
+pars_ordered <- runWinsteps(d[ ,1:25], d[ ,26:ncol(d)], partialCredit = TRUE)
+str(pars_ordered)
+pars_ordered$StructureFiles
+sd <- split(d, d$Sex)
+
+sdItms <- lapply(sd, "[", 1:25)
+sdDemos <- lapply(sd, "[", 26:ncol(d))
+pars_orderedGroup <- batchRunWinsteps(sdItms, sdDemos, list("Males", "Females"))
+str(pars_orderedGroup)
+
 ```
 
 The function writes control and data files necessary to run a basic Rasch model
@@ -119,6 +159,50 @@ functions in the package. Note that one of the things that's nice about this
 approach, however, is that the person files are read back in with each
 demographic variable separated into its own column, whereas the Winsteps files
 contain all person identifying information in a single column.
+
+We can now inspect the results by subsetting the list. For example, we can look at items by
+
+```{r itemsLSAT}
+itms_LSAT <- pars_LSAT$ItemParameters
+itms_LSAT
+```
+In this case, the test was really small (only five items) and so we can pretty much view everything we need here. In other cases, the output may be too large, and so further subsetting can be helpful. For example, let's look at the person parameters
+
+```{r personsLSAT}
+pers_LSAT <- pars_LSAT$PersonParameters
+head(pers_LSAT)
+sd(pers_LSAT$Theta)
+```
+
+The first six rows are shown above out of the `r nrow(pers_LSAT)` respondents. The mean square outfit is often a useful indicator not only of item functioning, but also of person fit to the model expectations (with high values indicating unexpected responses). Let's calculate the percentage of persons with a mean square outfit between 0.7 and 1.3 (these are fairly arbitrary cutoffs).
+
+```{r personOutfit}
+nrow( subset(pers_LSAT, Outfit >= 0.7 & Outfit <= 1.3) ) / nrow(pers_LSAT)
+```
+
+In the above code, I've calculated the number of rows in the subset data, and divided the result by the number of rows in the full data, to come up with the proportion `r nrow( subset(pers_LSAT, Outfit >= 0.7 & Outfit <= 1.3) ) / nrow(pers_LSAT)`. 
+
+
+
+
+
+The above example is really the heart of the package, and the following
+examples will show how it can be extended a bit. But it's also worth mentioning
+that each step can be carried out individually. While the package is intended
+to cover a wide range of models, it is not intended to cover the full
+functionality of *Winsteps*. If there is a model that one would like to fit,
+which is not included in the package, it can still be useful as a way to write
+the baseline control file and corresponding data file with the function
+`r2Winsteps()`. For example, we can use the same call as before, only this time
+using the `r2Winsteps` function, rather than `runWinsteps()`. This will write
+the corresponding control and data files, which can be modified by hand to
+obtain the specific model one would like to run.
+
+```{r writeCntrlDta}
+r2Winsteps(LSAT[ ,4:8], LSAT[ ,1:3])
+```
+
+
 
 \newpage
 
