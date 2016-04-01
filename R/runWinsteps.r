@@ -58,7 +58,8 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
             
         break
     }
-    
+    Sys.sleep(0.5) # Force R to sleep for half a second longer to ensure the data have actually been written to the files (not that they just exist)
+
     p <- batch.pfile(list(demNames))
     i <- batch.ifile(pat = substr(ifileName, 1, (nchar(ifileName) - 3)))
     if(file.exists(sfileName)) {
@@ -81,15 +82,15 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     
     if(exists("s")) {
         return(structure(
-                list("ItemParameters" = i[[1]], 
-                     "PersonParameters" = p[[1]],
-                     "StructureFiles" = s[[1]]), 
+                list("ItemParameters" = i, 
+                     "PersonParameters" = p,
+                     "StructureFiles" = s), 
             class = "r2Winsteps"))
     }
     else {
         return(structure(
-                list("ItemParameters" = i[[1]], 
-                     "PersonParameters" = p[[1]]), 
+                list("ItemParameters" = i, 
+                     "PersonParameters" = p), 
             class = "r2Winsteps"))
     }
 
