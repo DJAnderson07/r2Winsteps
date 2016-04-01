@@ -128,23 +128,18 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
             
         break
     }
-
+    Sys.sleep(0.5)
 #------------------------------- Import results -------------------------------
     p <- batch.pfile(demNameL = demNamesL, 
             files = substr(pFileNameV, 1, nchar(pFileNameV) - 4))
     i <- batch.ifile(files = substr(iFileNameV, 1, nchar(iFileNameV) - 4))
     s <- batch.sfile(files = substr(sFileNameV, 1, nchar(sFileNameV) - 4))
     
-    if(length(p) == 1 & length(i) == 1 & length(s) == 1) {
-        pars <- list("ItemParameters" = i[[1]], 
-                     "PersonParameters" = p[[1]],
-                     "StructureFiles" = s[[1]])
-    }
-    else {
-        pars <- list("ItemParameters" = i, 
-                     "PersonParameters" = p, 
+    
+    pars <- list("ItemParameters" = i, 
+                  "PersonParameters" = p, 
                      "StructureFiles" = s)
-    }
+    
 #----------------------- Remove files, if requested -----------------------    
     
     keepL <- list("iFile" = iFileNameV, "pFile" = pFileNameV, 
