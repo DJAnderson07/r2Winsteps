@@ -64,5 +64,8 @@ batch.ifile <- function(dir = getwd(), pat = "Ifile", files = NULL,
     ifiles <- lapply(ifiles, function(x) x[, -1])
     
     on.exit(setwd(oldD), add = TRUE)
+    if(length(ifiles) == 1) {
+        return(ifiles[[1]])
+    }
     return(ifiles)
 } 

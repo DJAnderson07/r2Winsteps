@@ -1,0 +1,42 @@
+reference	
+devtoolsInstall	
+install	
+loadData	LSAT
+pValues	
+ptBiserial	raw
+LSAT_mod1	demosLSAT	itemsLSAT	parsLSAT
+TIF	
+TIFcustomized	tif
+TIFshadeNoEcho	theta	tif	x1	x2	y
+TIFshade	
+TIFexpressionNoEcho	theta	tif	x1	x2	y
+TIFexpression	
+IIFs1	
+IIFs2	
+IIFs3	
+IIFs4	
+TIF_IIF1	
+TIF_IIFmin15	
+TCC	
+TCCreference	tcc
+ICCs	
+ICC5	i5b	itm5
+densities	itemD	personD
+paramInspect	
+itemsLSAT	itmsLSAT
+personsLSAT	persLSAT
+personOutfit	
+itmTable1	itmTbl
+itmTable2	
+persTable1	persSummary
+persTable2	persSummary	persTab
+unnamed-chunk-1	
+readPers1	pers
+readPers2	pers
+readItms	itms
+makeList	l
+loadOrderedData	science
+ratingScaleMod	ratingScale
+ratingScaleStructure	
+partialCreditMod	pc
+unnamed-chunk-2	

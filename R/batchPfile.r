@@ -16,7 +16,7 @@
 #' @param files Optional character vector of the names of the person files to be
 #'   read into R. Note that only the names of the files (not the extension) are
 #'   neccessary. The function assumes .txt files.
-#' @param pattern A common character string in all item files. Only used if 
+#' @param pat A common character string in all item files. Only used if 
 #'   \code{files = NULL}, Defaults to "Pfile", which is what is automatically 
 #'   generated when \code{link{r2Winsteps}} is called.
 #' @param r2WinstepsFile Logical. Was the \code{link{r2Winsteps}} function 
@@ -46,7 +46,7 @@
 #'   separate person file.
 
 batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL, 
-    pattern = "Pfile", r2WinstepsFile = TRUE,  
+    pat = "Pfile", r2WinstepsFile = TRUE,  
     varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8),
     pFileNames = c("Dropped", "Entry", "Theta", "Status", "Count", "RawScore", 
         "SE", "Infit", "Infit_Z", "Outfit", "Outfit_Z", "Displacement", 
@@ -61,8 +61,7 @@ batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL,
     }
 
     if (is.null(files)) {
-        files <- list.files()
-        files <- files[grep(as.character(pattern), files)]
+        files <- list.files(pattern = as.character(pat))
     }
     
     widthL <- vector("list", length(files))
@@ -128,5 +127,8 @@ batch.pfile <- function(demNameL = NULL, dir = getwd(), files = NULL,
     names(pfile) <- substr(files, 1, (nchar(files)) - 4)
 
     on.exit(setwd(oldDir), add = TRUE)
+    if(length(pfile) == 1) {
+        return(pfile[[1]])
+    }
     return(pfile)
 }

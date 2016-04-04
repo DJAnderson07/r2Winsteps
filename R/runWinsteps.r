@@ -51,14 +51,44 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     
     system(paste("open", batFile))
     
-    repeat {
-        Sys.sleep(0.1)
-        
-        if (file.exists(pfileName) == TRUE & file.exists(ifileName) == TRUE) 
-            
-        break
-    }
-    Sys.sleep(0.5) # Force R to sleep for half a second longer to ensure the data have actually been written to the files (not that they just exist)
+    pc <- as.list(call)$partialCredit
+    if(length(pc) != 0) { 
+    	if(pc == TRUE) {
+    		repeat {
+	        Sys.sleep(0.1)
+	        
+	        if (file.exists(pfileName) & 
+	        	file.exists(ifileName) &
+	        	file.exists(sfileName)) {
+		            pTemp <- readLines(pfileName)
+		            iTemp <- readLines(ifileName)
+		            sTemp <- readLines(ifileName)
+		            split <- strsplit(sTemp[length(sTemp)], " ")[[1]]
+	        
+	        if(length(pTemp) == (nrow(dems) + 2) & 
+	           	 length(iTemp) == (ncol(itms) + 2) &
+					split[length(split)] == names(itms)[ncol(itms)]) {
+	        break
+				    }
+				}	
+			}
+	    }
+	}
+    if(length(pc) == 0) {
+    	repeat {
+	        Sys.sleep(0.1)
+	        
+	        if (file.exists(pfileName) & file.exists(ifileName)) {
+	            pTemp <- readLines(pfileName)
+	            iTemp <- readLines(ifileName)
+	        
+	        if(length(pTemp) == (nrow(dems) + 2) & 
+	           	 length(iTemp) == (ncol(itms) + 2) ) {
+	        break	
+		        }
+		    }    
+		}	
+	}   
 
     p <- batch.pfile(list(demNames))
     i <- batch.ifile(pat = substr(ifileName, 1, (nchar(ifileName) - 3)))

@@ -1,0 +1,10 @@
+# To Do
+1. Fix the polytomous plots so they work for rating scale model
+3. Fix issue with needing at least 3 demographic variables
+4. Add person/item density plot
+5. Add cummulative category probabilities
+6. Add function to read in person and items concurrently (to help with plotting functions being more automatic)
+7. Create restructuring function for batchRunWinsteps that reorders the elements for plotting
+8. Think about classes more. Probably should change runWinsteps output to class runWinsteps, and have other things import as r2Winsteps (e.g., batch.pfile). Similarly, batchRunWinsteps should probably import as class batchRunWinsteps, rather than r2Winsteps.
+
+Get ICP working again

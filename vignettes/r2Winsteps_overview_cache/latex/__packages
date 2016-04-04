@@ -1,0 +1,7 @@
+base
+rmarkdown
+knitr
+r2Winsteps
+xtable
+devtools
+roxygen2

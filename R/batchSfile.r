@@ -41,6 +41,10 @@ batch.sfile <- function(dir = getwd(), pat = "Sfile", files = NULL) {
     }
     names(sfiles) <- substr(files, 1, (nchar(files) - 4))
     on.exit(setwd(oldD), add = TRUE)
+
+    if(length(sfiles) == 1) {
+        return(sfiles[[1]])
+    }
 return(sfiles)
 }
 

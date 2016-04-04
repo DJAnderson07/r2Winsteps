@@ -4,8 +4,8 @@
 \alias{plot.r2Winsteps}
 \title{Plot the test characteristic curve}
 \usage{
-\method{plot}{r2Winsteps}(ob, type = "TIF", itemSelect = NULL,
-  colors = NULL, theta = seq(-4, 4, 0.1), ...)
+plot.r2Winsteps(ob, type = "TIF", theta = seq(-4, 4, 0.1),
+  itemSelect = NULL, colors = NULL, legend = TRUE, store = FALSE, ...)
 }
 \arguments{
 \item{ob}{Objects of class r2Winsteps}
@@ -18,15 +18,20 @@ characteristic curve, item characteristic curves, item-category
 probabilities, and the Thurstonion thresholds. Note that ICP and Thresholds
 are only available for polytomous models. Defaults to "TIF".}
 
+\item{theta}{Theta values from which the information function values are
+calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of
+this range are used for the x-axes.}
+
 \item{itemSelect}{Items to be used in the plotting. Defaults to NULL, in
 which case all items will be used.}
 
 \item{colors}{Line colors for the plot. Defaults to NULL, in which case the
 \code{rainbow} function is used to create colors.}
 
-\item{theta}{Theta values from which the information function values are
-calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of
-this range are used for the x-axes.}
+\item{store}{Optional logical argument to return data used in plotting
+(not available for all plot types). For example, when \code{store = TRUE}
+and \code{type = TIF}, information under the specified theta range will be
+returned.}
 
 \item{...}{Additional arguments passed to \code{plot}}
 }

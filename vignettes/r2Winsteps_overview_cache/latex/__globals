@@ -1,0 +1,42 @@
+reference	citation
+devtoolsInstall	install.packages
+install	install_github	library
+loadData	data	head	library	LSAT
+pValues	apply	LSAT	mean
+ptBiserial	cor	LSAT	round	rowSums	sapply
+LSAT_mod1	LSAT	runWinsteps	str
+TIF	parsLSAT	plot
+TIFcustomized	parsLSAT	plot
+TIFshadeNoEcho	==	c	length	parsLSAT	plot	polygon	rgb	seq	which
+TIFshade	==	c	length	polygon	rgb	seq	tif	which
+TIFexpressionNoEcho	==	c	expression	length	parsLSAT	plot	polygon	rgb	seq	text	which
+TIFexpression	expression	text
+IIFs1	parsLSAT	plot
+IIFs2	c	parsLSAT	plot
+IIFs3	c	parsLSAT	plot
+IIFs4	c	parsLSAT	plot
+TIF_IIF1	parsLSAT	plot
+TIF_IIFmin15	c	parsLSAT	plot
+TCC	parsLSAT	plot
+TCCreference	==	parsLSAT	plot	segments	theta	which
+ICCs	parsLSAT	plot
+ICC5	$	c	parsLSAT	paste	plot	round	segments	text
+densities	$	c	density	legend	lines	parsLSAT	plot
+paramInspect	length	names	parsLSAT
+itemsLSAT	$	parsLSAT
+personsLSAT	$	head	parsLSAT
+personOutfit	&	<=	>=	nrow	Outfit	persLSAT	subset
+itmTable1	c	itmsLSAT
+itmTable2	c	itmTbl	kable	library	ncol	rep
+persTable1	!	$	c	duplicated	persLSAT
+persTable2	c	library	names<-	options	print	xtable
+unnamed-chunk-1	demosLSAT	itemsLSAT	r2Winsteps
+readPers1	batch.pfile	head
+readPers2	batch.pfile	c	head	list
+readItms	batch.ifile	head
+makeList	class<-	itms	list	pers	plot
+loadOrderedData	data	head	science
+ratingScaleMod	ncol	runWinsteps	science	str
+ratingScaleStructure	$	ratingScale
+partialCreditMod	ncol	runWinsteps	science	str
+unnamed-chunk-2	c	par	pc	plot

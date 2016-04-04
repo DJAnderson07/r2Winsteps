@@ -4,12 +4,12 @@
 \alias{batch.pfile}
 \title{Batch Read Winsteps Person Files (pfile) Into R}
 \usage{
-batch.pfile(demNameL = NULL, dir = getwd(), files = NULL,
-  pattern = "Pfile", r2WinstepsFile = TRUE, varWidths = c(1, 5, 8, 3, 8,
-  9, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 8), pFileNames = c("Dropped",
-  "Entry", "Theta", "Status", "Count", "RawScore", "SE", "Infit", "Infit_Z",
-  "Outfit", "Outfit_Z", "Displacement", "PointMeasureCorr", "Weight",
-  "ObservMatch", "ExpectMatch", "PointMeasureExpected", "RMSR", "WMLE"))
+batch.pfile(demNameL = NULL, dir = getwd(), files = NULL, pat = "Pfile",
+  r2WinstepsFile = TRUE, varWidths = c(1, 5, 8, 3, 8, 9, 7, 7, 7, 7, 7, 7,
+  7, 7, 6, 6, 6, 6, 8), pFileNames = c("Dropped", "Entry", "Theta", "Status",
+  "Count", "RawScore", "SE", "Infit", "Infit_Z", "Outfit", "Outfit_Z",
+  "Displacement", "PointMeasureCorr", "Weight", "ObservMatch", "ExpectMatch",
+  "PointMeasureExpected", "RMSR", "WMLE"))
 }
 \arguments{
 \item{demNameL}{Optional list containing the names of the demographic
@@ -23,7 +23,7 @@ directory.}
 read into R. Note that only the names of the files (not the extension) are
 neccessary. The function assumes .txt files.}
 
-\item{pattern}{A common character string in all item files. Only used if
+\item{pat}{A common character string in all item files. Only used if
 \code{files = NULL}, Defaults to "Pfile", which is what is automatically
 generated when \code{link{r2Winsteps}} is called.}
 

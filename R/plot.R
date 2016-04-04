@@ -14,13 +14,21 @@
 #' @param theta Theta values from which the information function values are 
 #' calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of 
 #' this range are used for the x-axes.
+#' @param store Optional logical argument to return data used in plotting 
+#' (not available for all plot types). For example, when \code{store = TRUE}
+#' and \code{type = TIF}, information under the specified theta range will be
+#' returned.
 #' @param ... Additional arguments passed to \code{plot}
 
-plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
-		theta = seq(-4, 4, 0.1), ...) {
+plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
+	itemSelect = NULL, colors = NULL, legend = TRUE,
+		 store = FALSE, ...) {
 	
-	b <-  ob$ItemParameters$Difficulty
-	sfile <- ob$StructureFiles
+	b <- ob$ItemParameters$Difficulty
+	if(length(ob) == 3) {
+		sfile <- ob$StructureFiles
+		sfile <- subset(sfile, Category != 0)
+	}
 	names(b) <- substr(
 						as.character(ob$ItemParameters$ItemID), 
 						2, 
@@ -39,20 +47,41 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 		b <- b[itemSelect]
 	}
 
-	prob <- function(b, theta) {
-		1 /(1 + exp(-(theta - b)))
-	}
+	if(length(ob) == 2) {
+		prob <- function(b, theta) {
+			1 /(1 + exp(-(theta - b)))
+		}
 
-
-	p <- sapply(b, prob, theta)
-	q <- 1 - p
-	IIF <- p*q
+		p <- sapply(b, prob, theta)
+		q <- 1 - p
+		IIF <- p*q
 
 	colnames(IIF) <- names(b)
 	colnames(p) <- names(b)
+	}
+	if(length(ob) == 3) {
+		prob <- function(delta) exp(theta - delta) / (1 + exp(theta - delta))
+		p <- mapply(prob, sfile$delta)
+		q <- 1 - p
+		IIF <- p*q # actually category information
+		cats <- sapply(split(sfile, sfile$Item), nrow)
+		
+		ICCs <- matrix(rep(NA, length(theta)*length(b)), ncol = length(b))
+		IIFs <- matrix(rep(NA, length(theta)*length(b)), ncol = length(b))
+		for(i in 1:length(b)) {
+			ICCs[ ,i] <- rowSums(p[ ,i:(i + (cats[i] - 1))])
+			IIFs[ ,i] <- rowSums(IIF[ ,i:(i + (cats[i] - 1))])
+		}	
+		colnames(ICCs) <- names(b)
+		colnames(IIFs) <- names(b)
 
+		
+	}
+
+
+	cols <- colorRampPalette(c("red", "green", "blue"))
 	if(is.null(colors)) {
-		colors <- rainbow(ncol(IIF))
+		colors <- cols(ncol(IIF))
 	}
 	
 	if(type == "TIF") {
@@ -63,11 +92,14 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			main = "Test Information Function",
 			col = colors,
 			...)
-		
+		if(store == TRUE) {
+			return(rowSums(IIF))
+		}
 	}
 	if(type == "IIFs") {
-		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-
+		if(legend == TRUE) {
+			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		}
 		yUpperLim <- max(apply(IIF, 2, max))
 		plot(theta, seq(0, yUpperLim, length.out = length(theta)),
 			type = "n", 
@@ -76,15 +108,18 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			main = "Item Information Functions", 
 			...)
 		for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])
-		legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = colnames(IIF),
-			col = colors,
-			lty = 1)
+		if(legend == TRUE) {
+			legend("topright", 
+				inset = c(-0.3, 0), 
+				legend = colnames(IIF),
+				col = colors,
+				lty = 1)
+		}
 	}
 	if(type == "TIF/IIF") {
-		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-
+		if(legend == TRUE) {
+			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		}
 		plot(theta, rowSums(IIF), type = "l", 
 				ylim = c(0, max(rowSums(IIF))),
 			xlab = expression(Theta),
@@ -92,42 +127,83 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			main = "Test and Item Information Functions",
 			...)
 		for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])
-		legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = c("TIF", colnames(IIF)),
-			col = c(1, colors),
-			lty = 1)
+		if(legend == TRUE) {
+			legend("topright", 
+				inset = c(-0.3, 0), 
+				legend = c("TIF", colnames(IIF)),
+				col = c(1, colors),
+				lty = 1)
+		}
 	}
 	if(type == "TCC") {
+		
 		expectedTotal <- rowSums(p)
+		
 		plot(theta, expectedTotal, 
 			type = "l",
 			xlab = expression(Theta),
 			ylab = "Expected Total Raw Score",
 			main = "Test Characteristic Curve",
+			col = colors,
 			...)
+		if(store == TRUE) {
+			return(expectedTotal)
+		}
 	}
 	if(type == "ICCs") {
-		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-		plot(theta, seq(0, 1, length.out = length(theta)), 
-			type = "n",
-			xlab = expression(Theta),
-			ylab = "Expected Total Raw Score",
-			main = "Item Characteristic Curves",
-			...)
-		for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i])
-			legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = colnames(p),
-			col = colors,
-			lty = 1)
+		if(legend == TRUE) {
+			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		}
+		if(length(ob) == 2) {
+			plot(theta, seq(0, 1, length.out = length(theta)), 
+				type = "n",
+				xlab = expression(Theta),
+				ylab = "Expected Total Raw Score",
+				main = "Item Characteristic Curves",
+				col = colors,
+				...)
+			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i], ...)
+			if(legend == TRUE) {
+				legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = colnames(p),
+					col = colors,
+					lty = 1)
+			}
+		}
+		else {
+			plot(theta, 
+					seq(0, max(ICCs), length.out = length(theta)), 
+				type = "n",
+				xlab = expression(Theta),
+				ylab = "Expected Total Raw Score",
+				main = "Item Characteristic Curves",
+				col = colors,
+				...)
+			for(i in 1:ncol(ICCs)) lines(theta, 
+										ICCs[ ,i], col = colors[i], ...)
+			if(legend == TRUE) {
+				legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = colnames(),
+					col = colors,
+					lty = 1)
+				}	
+		}
+		
+		
+		if(store == TRUE) {
+			return(p)
+		}
 	}
 	if(type == "ICP") {
 		if(length(ob) == 2) {
 			stop("Item Category Probability plots only available for
 				polytomous models")
 		}
-		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		if(legend == TRUE) {
+			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		}
 		
 		is <- split(sfile, sfile$Item)
 		cats <- lapply(is, nrow)
@@ -139,12 +215,12 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 		c5 <- vector("list", length(cats))
 		c6 <- vector("list", length(cats))
 		
-		if(identical(colors, rainbow(ncol(IIF)))) {
-			colors <- rainbow(6)
+		if(identical(colors, cols(ncol(IIF)))) {
+			colors <- cols(6)
 		}
 		for(i in 1:length(cats)) {
-			if(cats[[i]] == 3) {
-				d1 <- is[[i]]$Threshold[2]
+			if(cats[[i]] == 2) {
+				d1 <- is[[i]]$delta[2]
 
 				c1[[i]] <- 1 / 
 						(1+exp(theta - d1) + exp(2*theta))
@@ -161,15 +237,17 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			 lines(theta, c1[[i]], col = colors[1])
 			 lines(theta, c2[[i]], col = colors[2])
 			 lines(theta, c3[[i]], col = colors[3])
-			legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = paste("Cat", 1:3),
-			col = colors[1:3],
-			lty = 1)
+			if(legend == TRUE) {
+				legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = paste("Cat", 1:3),
+					col = colors[1:3],
+					lty = 1)
+				}
 			}
-			if(cats[[i]] == 4) {
-				d1 <- is[[i]]$Threshold[2]
-				d2 <- is[[i]]$Threshold[3]
+			if(cats[[i]] == 3) {
+				d1 <- is[[i]]$delta[2]
+				d2 <- is[[i]]$delta[3]
 
 				c1[[i]] <- 1 / 
 					(1 + exp(theta - d1) + exp(2*theta - (d1 + d2)) + 
@@ -194,16 +272,18 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			 lines(theta, c2[[i]], col = colors[2])
 			 lines(theta, c3[[i]], col = colors[3])
 			 lines(theta, c4[[i]], col = colors[4])
-			 legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = paste("Cat", 1:4),
-			col = colors[1:4],
-			lty = 1)
+			 if(legend == TRUE) {
+				legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = paste("Cat", 1:4),
+					col = colors[1:4],
+					lty = 1)
+				}
 			}
-			if(cats[[i]] == 5) {
-				d1 <- is[[i]]$Threshold[2]
-				d2 <- is[[i]]$Threshold[3]
-				d3 <- is[[i]]$Threshold[4]
+			if(cats[[i]] == 4) {
+				d1 <- is[[i]]$delta[2]
+				d2 <- is[[i]]$delta[3]
+				d3 <- is[[i]]$delta[4]
 
 				c1[[i]] <- 1 / 
 					(1 + exp(theta - d1) + exp(2*theta - (d1 + d2)) + 
@@ -233,17 +313,19 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			 lines(theta, c3[[i]], col = colors[3])
 			 lines(theta, c4[[i]], col = colors[4])
 			 lines(theta, c5[[i]], col = colors[5])
-			 legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = paste("Cat", 1:5),
-			col = colors[1:5],
-			lty = 1)
+			 if(legend == TRUE) {
+				 legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = paste("Cat", 1:5),
+					col = colors[1:5],
+					lty = 1)
+				}
 			}
-			if(cats[[i]] == 6) {
-				d1 <- is[[i]]$Threshold[2]
-				d2 <- is[[i]]$Threshold[3]
-				d3 <- is[[i]]$Threshold[4]
-				d4 <- is[[i]]$Threshold[5]
+			if(cats[[i]] == 5) {
+				d1 <- is[[i]]$delta[2]
+				d2 <- is[[i]]$delta[3]
+				d3 <- is[[i]]$delta[4]
+				d4 <- is[[i]]$delta[5]
 
 				c1[[i]] <- 1 / 
 					(1 + exp(theta - d1) + exp(2*theta - (d1 + d2)) + 
@@ -282,11 +364,13 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			 lines(theta, c4[[i]], col = colors[4])
 			 lines(theta, c5[[i]], col = colors[5])
 			 lines(theta, c6[[i]], col = colors[6])
-			 legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = paste("Cat", 1:6),
-			col = colors[1:6],
-			lty = 1)
+			 if(legend == TRUE) {
+				 legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = paste("Cat", 1:6),
+					col = colors[1:6],
+					lty = 1)
+				}
 		}
 		if(cats[[i]] > 6) {stop("Items with greater than 6 response options
 			are not currently supported for type = ICP")}			
@@ -298,7 +382,6 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 				polytomous models")
 		}
 		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-		sfile <- subset(sfile, Category != 0)
 		cats <- sapply(split(sfile, sfile$Item), nrow)
 		cumulative <- cumsum(cats)
 
@@ -320,12 +403,14 @@ plot.r2Winsteps <- function(ob, type = "TIF", itemSelect = NULL, colors = NULL,
 			for(j in ((cumulative - cats) + 1)[i]:cumulative[i]) {
 				lines(theta, probs[ ,j], col = colors[cols[j]])
 			}
-			legend("topright", 
-			inset = c(-0.3, 0), 
-			legend = expression(delta [paste(1:cats[i])]),
-			col = 
-			colors[((cumulative - cats) + 1)[1]:cumulative[1]],
-			lty = rep(1, cats[i]))
+			if(legend == TRUE) {
+				legend("topright", 
+					inset = c(-0.3, 0), 
+					legend = expression(delta [paste(1:cats[i])]),
+					col = 
+					colors[((cumulative - cats) + 1)[1]:cumulative[1]],
+					lty = rep(1, cats[i]))
+			}
 		}
 	}
 }
