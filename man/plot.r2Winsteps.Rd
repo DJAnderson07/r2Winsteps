@@ -4,7 +4,7 @@
 \alias{plot.r2Winsteps}
 \title{Plot the test characteristic curve}
 \usage{
-plot.r2Winsteps(ob, type = "TIF", theta = seq(-4, 4, 0.1),
+\method{plot}{r2Winsteps}(ob, type = "TIF", theta = seq(-4, 4, 0.1),
   itemSelect = NULL, colors = NULL, legend = TRUE, store = FALSE, ...)
 }
 \arguments{

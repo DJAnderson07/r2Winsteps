@@ -16,10 +16,16 @@
 #' @return List containing the item and person parameters from the given 
 #'   analysis.
 
-runWinsteps <- function(itms, dems, keep = FALSE, ...) {
+runWinsteps <- function(itms, keep = FALSE, ...) {
     
-    call <- r2Winsteps(itms, dems, ...)
-    
+    call <- r2Winsteps(itms, ...)
+
+    if(is.null(as.list(call)$dems)) {
+        dems <- data.frame(rownames = rownames(itms))
+    }
+    demNames <- names(dems) 
+   
+
     callTitle <- ifelse(!is.null(as.list(call)$title), as.list(call)$title, 
         "r2Winsteps")
     
@@ -45,8 +51,7 @@ runWinsteps <- function(itms, dems, keep = FALSE, ...) {
     
     batchWinsteps(callTitle)
     
-    demNames <- names(dems)
-    
+
     batFile <- paste(callTitle, ".bat", sep = "")
     
     system(paste("open", batFile))

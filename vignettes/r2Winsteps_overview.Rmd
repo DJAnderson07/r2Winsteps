@@ -496,7 +496,8 @@ We can fit the partial credit model to the same data by supplying the additional
 ```{r, partialCreditMod}
 pc <- runWinsteps(science[ ,1:25], science[ ,26:ncol(science)], 
 		partialCredit = TRUE)
-str(pc)
+
+
 ```
 Now, the category structure file includes Rasch-Andrich thresholds for each item. We can view the item-category probabilities by specifying `type = ICP`. By default all item category probabilities will be produced, and it's often helpful to specify a range, or only one item. For example, we can view the category probabilities for the first nine items with
 

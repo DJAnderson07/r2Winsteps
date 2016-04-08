@@ -33,11 +33,15 @@
 #' @export
 #' @return Control and Data file for analysis with Winsteps.
 
-r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL, 
+r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL, 
     anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps", 
     Ifile = TRUE, Pfile = TRUE, Sfile = TRUE, format = "txt", dec = 2) {
 
 #=============================== Write Data file ==============================
+    if(is.null(dems)) {
+        dems <- data.frame(rownames = rownames(itms))
+    }
+
     #Convert itms to character, code missing data as "M"
     itms <- apply(itms, 2, as.character)
     for (i in 1:ncol(itms)) {
@@ -73,18 +77,20 @@ r2Winsteps<-function(itms, dems, partialCredit = FALSE, idelete = NULL,
     for (i in 3:ncol(itms)) {
         istring <- paste(istring, itms[, i], sep = "")
     }
-    
+
     #Convert all dems columns to string; pad to largest column
+    dems <- as.data.frame(apply(dems, 2, as.character), stringsAsFactors = FALSE)
     for (i in 1:ncol(dems)) {
-        dems[, i] <- as.character(dems[, i])
         dems[, i] <- stringr::str_pad(dems[, i], max(nchar(dems[, 
             i])), side = "right")
     }
     
     #Paste demos into a single string
-    dstring <- paste(dems[, 1], dems[, 2], sep = " | ")
-    for (i in 3:ncol(dems)) {
-        dstring <- paste(dstring, dems[, i], sep = " | ")
+    if(ncol(dems) == 1) {
+        dstring <- dems[ ,1]
+    }
+    if(ncol(dems) > 1) {
+        dstring <- apply(dems, 1, paste, collapse = " | ")
     }
     
     #Put items and demos together

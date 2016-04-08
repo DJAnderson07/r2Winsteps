@@ -4,7 +4,7 @@
 \alias{r2Winsteps}
 \title{Write data and control files for Winsteps from R.}
 \usage{
-r2Winsteps(itms, dems, partialCredit = FALSE, idelete = NULL,
+r2Winsteps(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
   anchorFile = NULL, sAnchorFile = NULL, title = "r2Winsteps",
   Ifile = TRUE, Pfile = TRUE, Sfile = TRUE, format = "txt", dec = 2)
 }
