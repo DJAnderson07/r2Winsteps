@@ -97,15 +97,21 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 
 			cats <- sapply(split(sfile, sfile$Item), nrow)
 
-			index <- cbind(1:length(cats), cumsum(cats) -1)
-			ICCs <- sapply(index[ ,1], function(i) {
-						rowSums(p[ ,(index[i, 2]):(index[i, 2] + 
-							(cats[i] - 1))])
+			index <- matrix(c( c(1, (cumsum(cats) + 1)), 
+							   c(cumsum(cats), 999)), 
+						ncol = 2)
+			index <- index[-nrow(index), ]
+
+			sequences <- lapply(1:nrow(index), function(i) {
+				index[i, 1]:index[i, 2]
+			})
+
+			ICCs <- sapply(1:length(cats), function(i) {
+						 rowSums(p[ ,sequences[[i]] ])
 					})			
-			IIFs <- sapply(index[ ,1], function(i) {
-						rowSums(IIF[ ,(index[i, 2]):(index[i, 2] + 
-							(cats[i] - 1))])
-					})
+			IIFs <- sapply(1:length(cats), function(i) {
+						 rowSums(IIF[ ,sequences[[i]] ])
+					})	
 		}
 	colnames(ICCs) <- names(b)
 	colnames(IIFs) <- names(b)
