@@ -24,6 +24,8 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 	itemSelect = NULL, colors = NULL, legend = TRUE,
 		 store = FALSE, ...) {
 
+	on.exit(par(xpd = FALSE))
+	
 	b <- ob$ItemParameters$Difficulty
 	if(length(ob) == 3) {
 		sfile <- ob$StructureFiles
