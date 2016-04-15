@@ -91,7 +91,13 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 		if(ncol(sfile) == 3) {
 			prob <- function(delta) exp(theta - delta) / (1 + exp(theta - delta))
 			
+			num <- data.frame(itemID = names(b), Item = 1:length(b))		
+			thresholds <- merge(sfile, num, by = "Item")
+
+
+
 			p <- mapply(prob, sfile$delta)
+			colnames(p) <- paste0(thresholds$itemID, "c", thresholds$Category)
 			q <- 1 - p
 			IIF <- p*q # Actually the category information
 
@@ -300,7 +306,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 		for(i in seq_along(delta)) {
 			plot(0, 0, 
 				xlim = c(min(theta), max(theta)), 
-				ylim = c(0, max(unlist(catLines))), 
+				ylim = c(0, 1), 
 				type = "n",
 				xlab = expression(Theta),
 				ylab = "Probability",
@@ -323,38 +329,40 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 		
 	if(type == "thresholds") {
 		if(length(ob) == 2) {
-			stop("Thurstonian threshold plots only available for
-				polytomous models")
+			stop("Thurstonian threshold for dichotomous items are equivalent to the ICC. Use Type = 'ICCs'.")
 		}
-		par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-		cats <- sapply(split(sfile, sfile$Item), nrow)
-		cumulative <- cumsum(cats)
 
-		p <- function(delta) exp(theta - delta) / (1 + exp(theta - delta))
-		probs <- mapply(p, sfile$delta)
-
-		if(identical(colors, rainbow(ncol(IIF)))) {
-			colors <- rainbow(5)
+		pList <- lapply(seq_len(ncol(p)), function(i) p[ ,i])
+		pListNested <- vector("list", length(b))
+		for(i in seq_along(l)) {
+			pListNested[[i]] <- pList[sequences[[i]]]
 		}
-		
-		cols <- unlist(lapply(cats, function(i) 1:i))
-		for(i in 1:length(cats)) {
-			plot(theta, seq(0, 1, length.out = length(theta)), 
-					type = "n", 
+		names(pListNested) <- names(b)
+
+		colors <- rainbow(max(sapply(pListNested, length)))
+
+		if(legend == TRUE) {
+			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+		}
+		for(i in 1:length(pListNested)) {
+			plot(0, 0, 
+					xlim = c(min(theta), max(theta)), 
+					ylim = c(0, 1), 
+					type = "n",
 					xlab = expression(Theta),
 					ylab = "Probability",
-					main = "Rasch-Andrich Thresholds",
-					...)
-			for(j in ((cumulative - cats) + 1)[i]:cumulative[i]) {
-				lines(theta, probs[ ,j], col = colors[cols[j]])
+					main = paste("Thurstonian Thresholds:", 
+								names(pListNested)[i]))
+			for(j in seq_along(pListNested[[i]])) {
+				lines(x = theta, y = pListNested[[i]][[j]], col = colors[j])
 			}
+
 			if(legend == TRUE) {
-				legend("topright", 
-					inset = c(-0.3, 0), 
-					legend = expression(delta [paste(1:cats[i])]),
-					col = 
-					colors[((cumulative - cats) + 1)[1]:cumulative[1]],
-					lty = rep(1, cats[i]))
+			 legend("topright", 
+				inset = c(-0.3, 0), 
+				legend = paste("Cat", 1:length(pListNested[[i]])),
+				col = colors[1:length(pListNested[[i]])],
+				lty = 1)
 			}
 		}
 	}

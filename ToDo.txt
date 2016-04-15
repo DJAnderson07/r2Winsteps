@@ -1,11 +1,12 @@
 # To Do
-1. Fix the polytomous plots so they work for rating scale model (ICP the only one remaining)
+1. Fix the polytomous plots so they work for rating scale model (ICP & Thresholds the only one remaining)
 2. Update batchRunWinsteps with the same updates that have been made to runWinsteps (i.e., have it check the length of the file before reading it in, and allow dems to be optional). 
 2. Add person/item density plot
-3. Add cummulative category probabilities plot
-4. Add category information plot
-5. Add function to read in person and items concurrently (to help with plotting functions being more automatic)
-6. Create restructuring function for batchRunWinsteps that reorders the elements for plotting
-7. Think about classes more. Probably should change runWinsteps output to class runWinsteps, and have other things import as r2Winsteps (e.g., batch.pfile). Similarly, batchRunWinsteps should probably import as class batchRunWinsteps, rather than r2Winsteps.
-8. Check on warning about “ “ code showing up twice.
-9. When type = “ICP”, it looks like the legend is being written over with each pass of the loop
+3. Add category information plot
+4. Add function to read in person and items concurrently (to help with plotting functions being more automatic)
+5. Create restructuring function for batchRunWinsteps that reorders the elements for plotting
+6. Think about classes more. Probably should change runWinsteps output to class runWinsteps, and have other things import as r2Winsteps (e.g., batch.pfile). Similarly, batchRunWinsteps should probably import as class batchRunWinsteps, rather than r2Winsteps.
+7. Check on warning about “ “ code showing up twice.
+8. When type = “ICP”, it looks like the legend is being written over with each pass of the loop
+9. Figure out what’s going on with warning “In if (keep == FALSE) { :
+  the condition has length > 1 and only the first element will be used”
