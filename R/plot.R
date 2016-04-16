@@ -334,8 +334,16 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 
 		pList <- lapply(seq_len(ncol(p)), function(i) p[ ,i])
 		pListNested <- vector("list", length(b))
-		for(i in seq_along(l)) {
-			pListNested[[i]] <- pList[sequences[[i]]]
+		
+		if(ncol(sfile) == 2) {
+			for(i in seq_along(pListNested)) {
+				pListNested[[i]] <- pList[i:(i + (nrow(sfile) - 1))]
+			}
+		}
+		if(ncol(sfile) == 3) {
+			for(i in seq_along(pListNested)) {
+				pListNested[[i]] <- pList[sequences[[i]]]
+			}
 		}
 		names(pListNested) <- names(b)
 
@@ -358,9 +366,12 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 			}
 
 			if(legend == TRUE) {
+				taus <- lapply(1:length(pListNested[[1]]), function(p) {
+							bquote(tau[.(p)])
+						})
 			 legend("topright", 
 				inset = c(-0.3, 0), 
-				legend = paste("Cat", 1:length(pListNested[[i]])),
+				legend = as.expression(taus),
 				col = colors[1:length(pListNested[[i]])],
 				lty = 1)
 			}
