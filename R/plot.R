@@ -23,8 +23,6 @@
 plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 	itemSelect = NULL, colors = NULL, legend = TRUE,
 		 store = FALSE, ...) {
-
-	on.exit(par(xpd = FALSE))
 	
 	b <- ob$ItemParameters$Difficulty
 	if(length(ob) == 3) {
@@ -182,6 +180,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 					legend = colnames(IIFs),
 					col = colors,
 					lty = 1)
+				par(xpd = FALSE)
 			}
 			if(store == TRUE) {
 				return(IIFs)
@@ -206,6 +205,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				legend = c("TIF", colnames(IIF)),
 				col = c(1, colors),
 				lty = 1)
+			par(xpd = FALSE)
 		}
 	}
 	if(type == "TCC") {
@@ -242,6 +242,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 					legend = colnames(p),
 					col = colors,
 					lty = 1)
+				par(xpd = FALSE)
 			}
 			if(store == TRUE) {
 				return(p)
@@ -332,6 +333,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 							legend = paste("Cat", 1:length(catLines[[i]])),
 							col = colors[1:length(catLines[[i]])],
 							lty = 1)
+						 par(xpd = FALSE)
 					}
 				}
 			}
@@ -388,6 +390,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				legend = as.expression(taus),
 				col = colors[1:ncol(lines[[i]])],
 				lty = 1)
+			 par(xpd = FALSE)
 			}
 		}
 	if(store == TRUE) {
