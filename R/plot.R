@@ -276,12 +276,11 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 		if(legend == TRUE) {
 			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
 		}
-	
-		is <- split(sfile, sfile$Item)
-		names(is) <- names(b)
-		delta <- lapply(is, "[", "delta")
-
-		colors <- rainbow(max(sapply(is, nrow)) + 1)
+		if(ncol(sfile) == 3) {
+			is <- split(sfile, sfile$Item)
+			names(is) <- names(b)
+			delta <- lapply(is, "[", "delta")
+		}
 		
 		catProb <- function(d, b, theta) {
 			pieces <- vector("list", length(d))
@@ -298,12 +297,20 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 			}
 		return(lines)
 		}
+		if(ncol(sfile) == 2) {
+			colors <- rainbow(length(sfile$delta) + 1)
+			catLines <- lapply(1:length(b), function(i) {
+				catProb(sfile$delta, b[i], theta)
+			})
+		}
+		if(ncol(sfile) == 3) {
+			colors <- rainbow(max(sapply(is, nrow)) + 1)
+			catLines <- lapply(1:length(delta), function(i) {
+				catProb(delta[[i]]$delta, b[i], theta)
+			})
+		}
 
-		catLines <- lapply(1:length(delta), function(i) {
-			catProb(delta[[i]]$delta, b[i], theta)
-		})
-		
-		for(i in seq_along(delta)) {
+		for(i in seq_along(b)) {
 			plot(0, 0, 
 				xlim = c(min(theta), max(theta)), 
 				ylim = c(0, 1), 
@@ -311,7 +318,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				xlab = expression(Theta),
 				ylab = "Probability",
 				main = paste("Item-Category Probabilities: ", 
-								names(is)[i]),
+								names(b)[i]),
 				...)
 		
 				for(j in seq_along(catLines[[i]])) {
@@ -326,33 +333,36 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				}
 			}
 	}
-		
+	
 	if(type == "thresholds") {
-		if(length(ob) == 2) {
-			stop("Thurstonian threshold for dichotomous items are equivalent to the ICC. Use Type = 'ICCs'.")
-		}
-
-		pList <- lapply(seq_len(ncol(p)), function(i) p[ ,i])
-		pListNested <- vector("list", length(b))
-		
-		if(ncol(sfile) == 2) {
-			for(i in seq_along(pListNested)) {
-				pListNested[[i]] <- pList[i:(i + (nrow(sfile) - 1))]
-			}
-		}
-		if(ncol(sfile) == 3) {
-			for(i in seq_along(pListNested)) {
-				pListNested[[i]] <- pList[sequences[[i]]]
-			}
-		}
-		names(pListNested) <- names(b)
-
-		colors <- rainbow(max(sapply(pListNested, length)))
-
 		if(legend == TRUE) {
 			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
 		}
-		for(i in 1:length(pListNested)) {
+
+		if(ncol(sfile) == 3) {
+			is <- split(sfile, sfile$Item)
+			names(is) <- names(b)
+			delta <- lapply(is, "[[", "delta")
+		}
+
+		thurston <- function(d, b, theta) {
+			pieces <- vector("list", length(d))
+			for(i in seq_along(d)) {
+				pieces[[i]] <- exp(i*theta - sum(b + d[1:i]))	
+			}
+			
+			mat <- matrix(unlist(pieces), ncol = length(pieces))
+			denom <- 1 + rowSums(matrix(unlist(pieces), ncol = length(d))) 
+			
+			cumSums <- sapply(2:ncol(mat), function(i) {
+				rowSums(mat[ ,(i - 1):ncol(mat)]) / denom
+			})
+		return(cumSums)
+		}
+
+		lines <- lapply(seq_along(b), function(i) thurston(delta[[i]], b[i], theta))				
+		colors <- rainbow(max(sapply(lines, ncol)))
+		for(i in seq_along(lines)) {
 			plot(0, 0, 
 					xlim = c(min(theta), max(theta)), 
 					ylim = c(0, 1), 
@@ -360,19 +370,19 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 					xlab = expression(Theta),
 					ylab = "Probability",
 					main = paste("Thurstonian Thresholds:", 
-								names(pListNested)[i]))
-			for(j in seq_along(pListNested[[i]])) {
-				lines(x = theta, y = pListNested[[i]][[j]], col = colors[j])
+								names(b)[i]))
+			for(j in seq_len(ncol(lines[[i]]))) {
+				lines(x = theta, y = lines[[i]][ ,j], col = colors[j])
 			}
 
 			if(legend == TRUE) {
-				taus <- lapply(1:length(pListNested[[1]]), function(p) {
-							bquote(tau[.(p)])
+				taus <- lapply(1:ncol(lines[[i]]), function(i) {
+							bquote(tau[.(i)])
 						})
 			 legend("topright", 
 				inset = c(-0.3, 0), 
 				legend = as.expression(taus),
-				col = colors[1:length(pListNested[[i]])],
+				col = colors[1:ncol(lines[[i]])],
 				lty = 1)
 			}
 		}
