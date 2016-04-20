@@ -43,9 +43,12 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				num <- cbind(names(b), 1:length(b))
 				num <- subset(num, num[ ,1] %in% itemSelect)
 				num <- as.numeric(num[ ,2])
-			sfile <- subset(sfile, Item %in% num)
+				
+				sfile <- subset(sfile, Item %in% num)
 			}
-			sfile <- subset(sfile, Item %in% itemSelect)
+			else {
+				sfile <- subset(sfile, Item %in% itemSelect)
+			}
 		}
 	}
 	if(!is.null(itemSelect)) {
@@ -92,33 +95,34 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 		if(ncol(sfile) == 3) {
 			prob <- function(delta) exp(theta - delta) / (1 + exp(theta - delta))
 			
-			num <- data.frame(itemID = names(b), Item = 1:length(b))		
-			thresholds <- merge(sfile, num, by = "Item")
-
-
-
 			p <- mapply(prob, sfile$delta)
-			colnames(p) <- paste0(thresholds$itemID, "c", thresholds$Category)
+			colnames(p) <- paste0("i", sfile$Item, "c", sfile$Category)
 			q <- 1 - p
 			IIF <- p*q # Actually the category information
 
 			cats <- sapply(split(sfile, sfile$Item), nrow)
 
-			index <- matrix(c( c(1, (cumsum(cats) + 1)), 
-							   c(cumsum(cats), 999)), 
-						ncol = 2)
-			index <- index[-nrow(index), ]
+			if(length(cats) == 1) {
+				ICCs <- matrix(rowSums(p), ncol = 1)
+				IIFs <- matrix(rowSums(IIF), ncol = 1)
+			}
+			else {
+				index <- matrix(c( c(1, (cumsum(cats) + 1)), 
+								   c(cumsum(cats), 999)), 
+							ncol = 2)
+				index <- index[-nrow(index), ]
 
-			sequences <- lapply(1:nrow(index), function(i) {
-				index[i, 1]:index[i, 2]
-			})
+				sequences <- lapply(1:nrow(index), function(i) {
+					index[i, 1]:index[i, 2]
+				})
 
-			ICCs <- sapply(1:length(cats), function(i) {
-						 rowSums(p[ ,sequences[[i]] ])
-					})			
-			IIFs <- sapply(1:length(cats), function(i) {
-						 rowSums(IIF[ ,sequences[[i]] ])
-					})	
+				ICCs <- sapply(1:length(cats), function(i) {
+							 rowSums(p[ ,sequences[[i]] ])
+						})			
+				IIFs <- sapply(1:length(cats), function(i) {
+							 rowSums(IIF[ ,sequences[[i]] ])
+						})
+			}	
 		}
 	colnames(ICCs) <- names(b)
 	colnames(IIFs) <- names(b)
