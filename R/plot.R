@@ -29,7 +29,10 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 	b <- ob$ItemParameters$Difficulty
 	if(length(ob) == 3) {
 		sfile <- ob$StructureFiles
-		sfile <- subset(sfile, Category != 0)
+		min <- data.frame(minCat = tapply(sfile$Category, sfile$Item, min))
+		sfile <- merge(sfile, min, by.x = "Item", by.y = 0) 
+		sfile <- subset(sfile, Category != minCat, select = -4)
+
 	}
 	names(b) <- substr(
 						as.character(ob$ItemParameters$ItemID), 
@@ -354,9 +357,10 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 			mat <- matrix(unlist(pieces), ncol = length(pieces))
 			denom <- 1 + rowSums(matrix(unlist(pieces), ncol = length(d))) 
 			
-			cumSums <- sapply(2:ncol(mat), function(i) {
-				rowSums(mat[ ,(i - 1):ncol(mat)]) / denom
+			cumSums <- sapply(1:(ncol(mat) - 1), function(i) {
+				rowSums(mat[ ,i:ncol(mat)]) / denom
 			})
+			cumSums <- cbind(cumSums, pieces[[length(pieces)]] / denom)
 		return(cumSums)
 		}
 
@@ -386,5 +390,8 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 				lty = 1)
 			}
 		}
+	if(store == TRUE) {
+		return(lines)
+	}
 	}
 }
