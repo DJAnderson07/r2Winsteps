@@ -8,5 +8,4 @@
 7. Think about classes more. Probably should change runWinsteps output to class runWinsteps, and have other things import as r2Winsteps (e.g., batch.pfile). Similarly, batchRunWinsteps should probably import as class batchRunWinsteps, rather than r2Winsteps.
 8. Check on warning about “ “ code showing up twice.
 9. When type = “ICP”, it looks like the legend is being written over with each pass of the loop
-10. Figure out what’s going on with warning “In if (keep == FALSE) { :
-  the condition has length > 1 and only the first element will be used”
+

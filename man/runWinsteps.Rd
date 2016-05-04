@@ -4,10 +4,12 @@
 \alias{runWinsteps}
 \title{Run a Rasch model from R using Winsteps.}
 \usage{
-runWinsteps(itms, keep = FALSE, ...)
+runWinsteps(itms, dems = NULL, keep = FALSE, ...)
 }
 \arguments{
 \item{itms}{Dataframe or matrix of item responses to be analyzed.}
+
+\item{dems}{Dataframe or matrix of person identifiers/demographic fields.}
 
 \item{keep}{Logical. Should the external files used to conduct the analysis
 be stored in the working directory? If TRUE, Winsteps control and data
@@ -15,8 +17,6 @@ files will be retained, as well as item and person files in .txt format,
 and the .bat file used to process the data.}
 
 \item{...}{Additional arguments passed to \code{\link{r2Winsteps}}.}
-
-\item{dems}{Dataframe or matrix of person identifiers/demographic fields.}
 }
 \value{
 List containing the item and person parameters from the given
