@@ -3,8 +3,9 @@
 #' This function uses the Winsteps software to analyze data, and then reads the
 #'   data back into R without leaving  R interface or interacting with the
 #'   Winsteps GUI.
-#' @param itms Dataframe or matrix of item responses to be analyzed.
-#' @param dems Dataframe or matrix of person identifiers/demographic fields.
+#' @param itms Data frame or matrix of item responses to be analyzed.
+#' @param dems Optional data frame or matrix of person identifiers/demographic
+#'   fields.
 #' @param keep Logical. Should the external files used to conduct the analysis 
 #'   be stored in the working directory? If TRUE, Winsteps control and data 
 #'   files will be retained, as well as item and person files in .txt format, 
@@ -16,7 +17,7 @@
 #' @return List containing the item and person parameters from the given 
 #'   analysis.
 
-runWinsteps <- function(itms, keep = FALSE, ...) {
+runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
     
     call <- r2Winsteps(itms, ...)
 
