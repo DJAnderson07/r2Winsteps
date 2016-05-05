@@ -18,11 +18,13 @@
 #'   analysis.
 
 runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
-    
-    call <- r2Winsteps(itms, ...)
 
-    if(is.null(as.list(call)$dems)) {
+    if(is.null(dems)) {
+    	call <- r2Winsteps(itms, ...)
         dems <- data.frame(rownames = rownames(itms))
+    }
+    else {
+    	call <- r2Winsteps(itms, dems, ...)
     }
     demNames <- names(dems) 
    
@@ -57,11 +59,20 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
     
     system(paste("open", batFile))
     
+    pt <- proc.time()
     pc <- as.list(call)$partialCredit
+    outFile <- paste0(callTitle, "Out.txt")
+
     if(length(pc) != 0) { 
     	if(pc == TRUE) {
     		repeat {
 	        Sys.sleep(0.1)
+	        
+	        if(is.na(readLines(outFile)[27], " ")) {
+				break
+				stop(paste("Winsteps could not estimate the model. Check ", 
+						outFile, "for details."))
+			}
 	        
 	        if (file.exists(pfileName) & 
 	        	file.exists(ifileName) &
@@ -70,15 +81,23 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 		            iTemp <- readLines(ifileName)
 		            sTemp <- readLines(ifileName)
 		            split <- strsplit(sTemp[length(sTemp)], " ")[[1]]
-	        
+	        }
 	        if(length(pTemp) == (nrow(dems) + 2) & 
 	           	 length(iTemp) == (ncol(itms) + 2) &
 					split[length(split)] == names(itms)[ncol(itms)]) {
 	        break
-				    }
-				}	
-			}
-	    }
+				}
+			
+			if(file.exists(outFile)) {
+				if(is.na(readLines(outFile)[27])) {
+					stop(
+						paste("Winsteps could not estimate the model. Check ", 
+							outFile, "for details.")
+						)
+				}
+			}	
+	    	}
+		}
 	}
     if(length(pc) == 0) {
     	repeat {
@@ -93,6 +112,12 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 	        break	
 		        }
 		    }    
+		if(file.exists(outFile)) {
+			if(is.na(readLines(outFile)[27])) {
+				stop(paste("Winsteps could not estimate the model. Check ", 
+							outFile, "for details."))
+				}
+			}
 		}	
 	}   
 
@@ -102,9 +127,8 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
         s <- batch.sfile(pat = substr(sfileName, 1, (nchar(sfileName) - 3)))
     }
     if (keep == FALSE) {
-        cntrlFile <- paste(callTitle, "Cntrl.txt", sep = "")
-        dtaFile <- paste(callTitle, "Dta.txt", sep = "")
-        outFile <- paste(callTitle, "Out.txt", sep = "")
+        cntrlFile <- paste0(callTitle, "Cntrl.txt")
+        dtaFile <- paste0(callTitle, "Dta.txt")
         if(exists("s")) {
             file.remove(c(pfileName, ifileName, sfileName, batFile, 
             cntrlFile, dtaFile, outFile))
