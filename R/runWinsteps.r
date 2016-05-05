@@ -68,12 +68,6 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
     		repeat {
 	        Sys.sleep(0.1)
 	        
-	        if(is.na(readLines(outFile)[27], " ")) {
-				break
-				stop(paste("Winsteps could not estimate the model. Check ", 
-						outFile, "for details."))
-			}
-	        
 	        if (file.exists(pfileName) & 
 	        	file.exists(ifileName) &
 	        	file.exists(sfileName)) {
@@ -88,14 +82,13 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 	        break
 				}
 			
-			if(file.exists(outFile)) {
-				if(is.na(readLines(outFile)[27])) {
-					stop(
-						paste("Winsteps could not estimate the model. Check ", 
-							outFile, "for details.")
-						)
-				}
-			}	
+            if(file.exists(outFile)) {
+                if(length(readLines(outFile)) > 0 & 
+                        is.na(readLines(outFile)[27])) {
+                    stop(paste("Winsteps could not estimate the model. Check ", 
+                                outFile, "for details."))
+                    }
+                }	
 	    	}
 		}
 	}
@@ -112,8 +105,10 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 	        break	
 		        }
 		    }    
-		if(file.exists(outFile)) {
-			if(is.na(readLines(outFile)[27])) {
+		
+        if(file.exists(outFile)) {
+			if(length(readLines(outFile)) > 0 & 
+                    is.na(readLines(outFile)[27])) {
 				stop(paste("Winsteps could not estimate the model. Check ", 
 							outFile, "for details."))
 				}
