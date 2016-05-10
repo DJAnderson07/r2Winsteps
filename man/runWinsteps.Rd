@@ -7,9 +7,10 @@
 runWinsteps(itms, dems = NULL, keep = FALSE, ...)
 }
 \arguments{
-\item{itms}{Dataframe or matrix of item responses to be analyzed.}
+\item{itms}{Data frame or matrix of item responses to be analyzed.}
 
-\item{dems}{Dataframe or matrix of person identifiers/demographic fields.}
+\item{dems}{Optional data frame or matrix of person identifiers/demographic
+fields.}
 
 \item{keep}{Logical. Should the external files used to conduct the analysis
 be stored in the working directory? If TRUE, Winsteps control and data
