@@ -73,7 +73,7 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 	        	file.exists(sfileName)) {
 		            pTemp <- readLines(pfileName)
 		            iTemp <- readLines(ifileName)
-		            sTemp <- readLines(ifileName)
+		            sTemp <- readLines(sfileName)
 		            split <- strsplit(sTemp[length(sTemp)], " ")[[1]]
 	        }
 	        if(length(pTemp) == (nrow(dems) + 2) & 
