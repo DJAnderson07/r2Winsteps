@@ -129,10 +129,8 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
                 iTemp <- readLines(lastIfileName)
             #    sTemp <- readLines(lastSfileName)
             #    split <- strsplit(sTemp[length(sTemp)], " ")[[1]]
-            }
-        if(exists("pTemp") & exists("iTemp")) {    
             if(length(pTemp) == (nrow(demsL[[length(demsL)]]) + 2) & 
-                 length(iTemp) == (ncol(itms[[length(itms)]]) + 2)) { #&
+                 length(iTemp) == (ncol(itmsL[[length(itmsL)]]) + 2)) { #&
                 #    split[length(split)] == names(itms)[ncol(itms)]) {
                 break
             }

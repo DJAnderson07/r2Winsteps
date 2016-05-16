@@ -27,9 +27,9 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 	b <- ob$ItemParameters$Difficulty
 	if(length(ob) == 3) {
 		sfile <- ob$StructureFiles
-		min <- data.frame(minCat = tapply(sfile$Category, sfile$Item, min))
-		sfile <- merge(sfile, min, by.x = "Item", by.y = 0) 
-		sfile <- subset(sfile, Category != minCat, select = -4)
+		# min <- data.frame(minCat = tapply(sfile$Category, sfile$Item, min))
+		# sfile <- merge(sfile, min, by.x = "Item", by.y = 0) 
+		# sfile <- subset(sfile, Category != minCat, select = -4)
 
 	}
 	names(b) <- substr(

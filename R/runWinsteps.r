@@ -36,7 +36,7 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
     pfileName <- paste(callTitle, "Pfile.txt", sep = "")
     ifileName <- paste(callTitle, "Ifile.txt", sep = "")
     sfileName <- paste(callTitle, "Sfile.txt", sep = "")
-    
+
     if (file.exists(pfileName) == TRUE) {
         invisible(file.remove(pfileName))
         warning("Previously estimated person file removed.")
@@ -75,22 +75,20 @@ runWinsteps <- function(itms, dems = NULL, keep = FALSE, ...) {
 		            iTemp <- readLines(ifileName)
 		            sTemp <- readLines(sfileName)
 		            split <- strsplit(sTemp[length(sTemp)], " ")[[1]]
-	        }
-	        if(length(pTemp) == (nrow(dems) + 2) & 
-	           	 length(iTemp) == (ncol(itms) + 2) &
-					split[length(split)] == names(itms)[ncol(itms)]) {
-	        break
+	           if(length(pTemp) == (nrow(dems) + 2) & 
+	           	  length(iTemp) == (ncol(itms) + 2) &
+				  na.omit(as.numeric(split))[1] == ncol(itms))
+            break
 				}
-			
+			}
             if(file.exists(outFile)) {
                 if(length(readLines(outFile)) > 0 & 
                         is.na(readLines(outFile)[27])) {
-                    stop(paste("Winsteps could not estimate the model. Check ", 
+                stop(paste("Winsteps could not estimate the model. Check ", 
                                 outFile, "for details."))
-                    }
-                }	
-	    	}
-		}
+                }
+            }	
+    	}
 	}
     if(length(pc) == 0) {
     	repeat {

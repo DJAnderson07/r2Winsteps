@@ -8,4 +8,4 @@
 7. Think about classes more. Probably should change runWinsteps output to class runWinsteps, and have other things import as r2Winsteps (e.g., batch.pfile). Similarly, batchRunWinsteps should probably import as class batchRunWinsteps, rather than r2Winsteps.
 8. Check on warning about “ “ code showing up twice.
 9. When type = “ICP”, it looks like the legend is being written over with each pass of the loop
-
+10. Look at commented out code in plot. Uncomment and fix. When the number of categories is 1, the sapply on lines 119 - 124 doesn’t work.
