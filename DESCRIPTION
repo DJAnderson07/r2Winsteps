@@ -1,16 +1,27 @@
 Package: r2Winsteps
-Title: A package for interfacing between R and the Rasch modeling software Winsteps
+Title: A package for interfacing between R and the Rasch modeling software
+    Winsteps
 Version: 0.0.0.9000
 Authors@R: person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre"))
-Description: The `r2Winsteps` package was developed to provide a convenient interface
-  between *R* and the Rasch modeling software *Winsteps*. The package is not intended to encompass the full capabilities of *Winsteps*, but rather to provide a simple framework for estimating many commonly applied models. The primary functions, `runWinsteps()` takes a matrix or data frame of item responses and person demographics, and writes and executes a .bat file to run the analysis through Winsteps. Person and item parameter estimates are then returned to R.
-Depends: R (>= 3.2.0)
-Imports: stringr (>= 1.0.0)
+Description: The `r2Winsteps` package was developed to provide a convenient
+    interface between *R* and the Rasch modeling software *Winsteps*. The package
+    is not intended to encompass the full capabilities of *Winsteps*, but rather
+    to provide a simple framework for estimating many commonly applied models.
+    The primary functions, `runWinsteps()` takes a matrix or data frame of item
+    responses and person demographics, and writes and executes a .bat file to run
+    the analysis through Winsteps. Person and item parameter estimates are then
+    returned to R.
+Depends:
+    R (>= 3.2.0)
+Imports:
+    stringr (>= 1.0.0)
 URL: https://github.com/DJAnderson07/r2Winsteps
 BugReports: https://github.com/DJAnderson07/r2Winsteps/issues
 License: MIT + file LICENSE
 Date: 2015-05-22
 COPYRIGHT HOLDER: Daniel Anderson
 LazyData: true
-Suggests: knitr
+Suggests:
+    knitr
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1
