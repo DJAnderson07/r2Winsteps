@@ -10,6 +10,9 @@
 #' models. When specifying \code{lty} or \code{lwd} for "iDens", a vector (of
 #' length 2) must be supplied, corresponding to each distribution. Defaults to
 #' "TIF".
+#' @param rel When \code{type == "TIF"}, should the distribution be shaded 
+#' according to reliability? Defaults to \code{TRUE} and shades the
+#' distribution according to 0.8 and 0.7 reliabilities.
 #' @param itemSelect Items to be used in the plotting. Defaults to NULL, in
 #' which case all items will be used.
 #' @param colors Line colors for the plot. Defaults to NULL, in which case the
@@ -19,13 +22,13 @@
 #' this range are used for the x-axes.
 #' @param store Optional logical argument to return data used in plotting 
 #' (not available for all plot types). For example, when \code{store = TRUE}
-#' and \code{type = TIF}, information under the specified theta range will be
+#' and \code{type = "TIF"}, information under the specified theta range will be
 #' returned.
 #' @param ... Additional arguments passed to \code{plot}
 
-plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
-	itemSelect = NULL, colors = NULL, legend = TRUE,
-		 store = FALSE, ...) {
+plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE, 
+	theta = seq(-4, 4, 0.1), itemSelect = NULL, colors = NULL, 
+	legend = TRUE, store = FALSE, ...) {
 	
 	args <- as.list(match.call())
 	
@@ -146,6 +149,28 @@ plot.r2Winsteps <- function(ob, type = "TIF", theta = seq(-4, 4, 0.1),
 			main = "Test Information Function",
 			col = colors,
 			...)
+		if(rel == TRUE) {
+			info <- rowSums(IIF)
+
+			theta80 <- theta[info >= 5]
+			info80 <- info[info >= 5]
+			polygon(c(min(theta80), theta80, max(theta80)), c(0, info80, 0), 
+				col = rgb(0, 0.2, 0.4, 0.1),
+				border = FALSE)
+
+			theta70 <- theta[info >= 3.33333]
+			info70 <- info[info >= 3.333333]
+			polygon(c(min(theta70), theta70, max(theta70)), c(0, info70, 0), 
+				col = rgb(0, 0.2, 0.4, 0.1),
+				border = FALSE)
+			legend("topright", 
+				    box.lwd = 0,
+				    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
+				    border = c("white", "white"),
+				    c(expression(italic(p * theta * theta^"'" == 0.80)),
+				      expression(italic(p * theta * theta^"'" == 0.70))),
+				    cex = 1.5)
+					}
 		if(store == TRUE) {
 			return(rowSums(IIF))
 		}
