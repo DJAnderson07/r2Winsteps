@@ -174,5 +174,5 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
 
     invisible(sapply(remove, file.remove))
 
-return(pars)
+return(structure(pars, class = "batchRunWinsteps"))
 } 
