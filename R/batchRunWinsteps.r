@@ -143,9 +143,16 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
   #  s <- batch.sfile(files = substr(sFileNameV, 1, nchar(sFileNameV) - 4))
     
     
-    pars <- list("ItemParameters" = i, 
-                  "PersonParameters" = p) #, 
-                  #   "StructureFiles" = s)
+    pars <- vector("list", length(p))
+
+    for(loop in seq_along(pars)) {
+        pars[[loop]] <- structure(
+                    list("ItemParameters" = i[[loop]], 
+                         "PersonParameters" = p[[loop]]), 
+                class = "r2Winsteps")
+    }
+    names(pars) <- substr(names(i), 1, nchar(names(i)) - 5)
+
     
 #----------------------- Remove files, if requested -----------------------    
     
