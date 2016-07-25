@@ -32,7 +32,7 @@ For the primary motivations behind the development of the package, see the
   daniela@uoregon.edu, or log them at
   https://github.com/DJAnderson07/r2Winsteps/issues.
 
-### Installation
+## Installation
 
 
 ```r
@@ -177,7 +177,7 @@ str(parsSci)
 ##  - attr(*, "class")= chr "r2Winsteps"
 ```
 
-### Test information function
+## Test information function
 
 We can view the test information function by just calling `plot` on the object
 
@@ -190,7 +190,7 @@ plot(parsSci)
 
 Notice that the regions where reliability is 0.8 and 0.7 are shaded by default.
 
-### Item category probabilities
+## Item category probabilities
 
 Next let's look at the item category probabilities for the first six items.
 
@@ -204,7 +204,7 @@ plot(parsSci, type = "ICP", itemSelect = 1:6)
 
 Let's view some more plots
 
-### Item information function
+## Item information function
 
 ```r
 plot(parsSci, type = "IIFs")
@@ -212,7 +212,7 @@ plot(parsSci, type = "IIFs")
 
 <img src="readmefigs/iifs-1.png" width="672" />
 
-### Test characteristic curve
+## Test characteristic curve
 
 ```r
 plot(parsSci, type = "TCC")
@@ -220,7 +220,7 @@ plot(parsSci, type = "TCC")
 
 <img src="readmefigs/tcc-1.png" width="672" />
 
-### Item characteristic curves
+## Item characteristic curves
 
 ```r
 plot(parsSci, type = "ICCs")
@@ -228,7 +228,7 @@ plot(parsSci, type = "ICCs")
 
 <img src="readmefigs/iccs-1.png" width="672" />
 
-### Item-Person density
+## Item-Person density
 
 ```r
 plot(parsSci, type = "ipDens")
@@ -236,7 +236,7 @@ plot(parsSci, type = "ipDens")
 
 <img src="readmefigs/ip-1.png" width="672" />
 
-### Thresholds: First 6 items
+## Thresholds: First 6 items
 
 ```r
 par(mfrow = c(3, 2))
