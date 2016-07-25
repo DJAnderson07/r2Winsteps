@@ -1,12 +1,3 @@
----
-title: "r2Winsteps: An R package for interfacing between R and the Rasch Modeling Software Winsteps"
-author: "Daniel Anderson"
-date: "2016-07-25"
-output: html_document
----
-
-
-
 # Overview
 The *r2Winsteps* package was developed to provide a convenient interface
   between *R* and the Rasch modeling software *Winsteps*
