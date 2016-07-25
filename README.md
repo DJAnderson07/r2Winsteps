@@ -226,7 +226,7 @@ plot(parsSci, type = "TCC")
 plot(parsSci, type = "ICCs")
 ```
 
-<img src="readmefigs/iccs-1.png" width="672" />
+<img src="readmefigs/iccs.png" width="672" />
 
 ## Item-Person density
 
