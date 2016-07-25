@@ -66,7 +66,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
 
 #Return anchor file check if anchorFileL is supplied.
     if(!is.null(anchorFileL)){
-        cat("The following anchor files were used in the corresponding analyses:",
+        message("The following anchor files were used in the corresponding analyses: \n",
             paste("Anchor File", "Analysis Title", sep = " == "), sep = "\n")
         analysisAnchor<-vector("list", length(itmsL))
 
@@ -75,7 +75,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
                 analysisAnchor[[i]] <- paste(anchorFileL[[i]],
                                             paste("r2Winsteps",i, sep = ""),  
                                         sep = " == ")
-            cat(analysisAnchor[[i]], sep = "\n")
+            message(analysisAnchor[[i]], sep = "\n")
             }
         }
         if(!is.null(titleL)){
@@ -83,7 +83,7 @@ batch_r2Winsteps <- function(itmsL, demsL, batName = "r2WinstepsBatch",
                 analysisAnchor[[i]] <- paste(anchorFileL[[i]],
                                             titleL[[i]], 
                                         sep = " == ")
-            cat(analysisAnchor[[i]], sep = "\n")
+            message(analysisAnchor[[i]], sep = "\n")
             }
         }    
     }
