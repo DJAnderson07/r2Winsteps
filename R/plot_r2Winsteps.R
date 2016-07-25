@@ -1,15 +1,14 @@
 #' Plot the test characteristic curve
 #' @param ob Objects of class r2Winsteps
 #' @param type The type of plot to produce. Valid values are "TIF", "IIFs",
-#' "TIF/IIF", "TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
+#' "TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
 #' correspond to, respectively, the test information function, item information
-#' functions, both the test and item information functions, the test
-#' characteristic curve, item characteristic curves, item-category
-#' probabilities, Thurstonion thresholds, and overlayed item and person
-#' densities. Note that ICP and Thresholds are only available for polytomous 
-#' models. When specifying \code{lty} or \code{lwd} for "iDens", a vector (of
-#' length 2) must be supplied, corresponding to each distribution. Defaults to
-#' "TIF".
+#' functions, the test characteristic curve, item characteristic curves,
+#' item-category probabilities, Thurstonion thresholds, and overlayed item and 
+#' person densities. Note that ICP and Thresholds are only available for 
+#' polytomous models. When specifying \code{lty} or \code{lwd} for "iDens", a 
+#' vector (of length 2) must be supplied, corresponding to each distribution. 
+#' Defaults to "TIF".
 #' @param rel When \code{type == "TIF"}, should the distribution be shaded 
 #' according to reliability? Defaults to \code{TRUE} and shades the
 #' distribution according to 0.8 and 0.7 reliabilities.
@@ -24,14 +23,14 @@
 #' (not available for all plot types). For example, when \code{store = TRUE}
 #' and \code{type = "TIF"}, information under the specified theta range will be
 #' returned.
-#' @param ... Additional arguments passed to \code{plot}
+#' @param ... Additional arguments passed to \code{\link{plot}}.
 
 plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE, 
 	theta = seq(-4, 4, 0.1), itemSelect = NULL, colors = NULL, 
 	legend = TRUE, store = FALSE, ...) {
 	
 	args <- as.list(match.call())
-	
+
 	b <- ob$ItemParameters$Difficulty
 	if(length(ob) == 3) {
 		sfile <- ob$StructureFiles
@@ -142,13 +141,25 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	}
 	
 	if(type == "TIF") {
-		plot(theta, rowSums(IIF), 
-			type = "l", 
-			xlab = expression(Theta),
-			ylab = "Information", 
-			main = "Test Information Function",
-			col = colors,
-			...)
+		if(legend == FALSE) {
+			plot(theta, rowSums(IIF), 
+				type = "l", 
+				xlab = expression(Theta),
+				ylab = "Information", 
+				main = "Test Information Function",
+				col = colors,
+				...)
+		}
+		if(legend == TRUE) {
+			par(c(5, 4, 4, 6) + 0.1)
+			plot(theta, rowSums(IIF), 
+				type = "l", 
+				xlab = expression(Theta),
+				ylab = "Information", 
+				main = "Test Information Function",
+				col = colors,
+				...)
+		}
 		if(rel == TRUE) {
 			info <- rowSums(IIF)
 
@@ -163,13 +174,16 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			polygon(c(min(theta70), theta70, max(theta70)), c(0, info70, 0), 
 				col = rgb(0, 0.2, 0.4, 0.1),
 				border = FALSE)
-			legend("topright", 
-				    box.lwd = 0,
-				    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
-				    border = c("white", "white"),
-				    c(expression(italic(p * theta * theta^"'" == 0.80)),
-				      expression(italic(p * theta * theta^"'" == 0.70))),
-				    cex = 1.5)
+			if(legend == TRUE) {
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+				legend("topright", 
+					    box.lwd = 0,
+					    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
+					    border = c("white", "white"),
+					    c(expression(italic(p * theta * theta^"'" == 0.80)),
+					      expression(italic(p * theta * theta^"'" == 0.70))),
+					    cex = 1.5)
+						}
 					}
 		if(store == TRUE) {
 			return(rowSums(IIF))
@@ -177,7 +191,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	}
 	if(type == "IIFs") {
 		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+			par(mar = c(5, 4, 4, 7.5) + 0.1)
 		}
 		if(length(ob) == 2) {
 			yUpperLim <- max(apply(IIF, 2, max))
@@ -189,8 +203,16 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 				...)
 			for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])
 			if(legend == TRUE) {
-				legend("topright", 
-					inset = c(-0.3, 0), 
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+				plot(theta, seq(0, yUpperLim, length.out = length(theta)),
+					type = "n", 
+					xaxt = "n",
+					yaxt = "n",
+					bty = "n",
+					xlab = "",
+					ylab = "", 
+					main = "")
+				legend("topright",  
 					legend = colnames(IIF),
 					col = colors,
 					lty = 1)
@@ -209,12 +231,20 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 				...)
 			for(i in 1:ncol(IIFs)) lines(theta, IIFs[ ,i], col = colors[i])
 			if(legend == TRUE) {
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+				plot(theta, seq(0, yUpperLim, length.out = length(theta)),
+					type = "n", 
+					xaxt = "n",
+					yaxt = "n",
+					bty = "n",
+					xlab = "",
+					ylab = "", 
+					main = "")
 				legend("topright", 
-					inset = c(-0.3, 0), 
 					legend = colnames(IIFs),
 					col = colors,
-					lty = 1)
-				par(xpd = FALSE)
+					lty = 1,
+					box.lwd = 0)
 			}
 			if(store == TRUE) {
 				return(IIFs)
@@ -222,30 +252,8 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		}
 
 	}
-	if(type == "TIF/IIF") {
-		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
-		}
-		plot(theta, rowSums(IIF), type = "l", 
-				ylim = c(0, max(rowSums(IIF))),
-			xlab = expression(Theta),
-			ylab = "Information", 
-			main = "Test and Item Information Functions",
-			...)
-		for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])
-		if(legend == TRUE) {
-			legend("topright", 
-				inset = c(-0.3, 0), 
-				legend = c("TIF", colnames(IIF)),
-				col = c(1, colors),
-				lty = 1)
-			par(xpd = FALSE)
-		}
-	}
 	if(type == "TCC") {
-		
 		expectedTotal <- rowSums(p)
-		
 		plot(theta, expectedTotal, 
 			type = "l",
 			xlab = expression(Theta),
@@ -259,7 +267,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	}
 	if(type == "ICCs") {
 		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+			par(mar=c(5, 4, 4, 8) + .1)
 		}
 		if(length(ob) == 2) {
 			plot(theta, seq(0, 1, length.out = length(theta)), 
@@ -271,12 +279,18 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 				...)
 			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i], ...)
 			if(legend == TRUE) {
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+				plot(theta, seq(0, 1, length.out = length(theta)), 
+					type = "n",
+					xlab = "",
+					ylab = "",
+					main = "",
+					xaxt = "n",
+					yaxt = "n")
 				legend("topright", 
-					inset = c(-0.3, 0), 
 					legend = colnames(p),
 					col = colors,
 					lty = 1)
-				par(xpd = FALSE)
 			}
 			if(store == TRUE) {
 				return(p)
@@ -294,17 +308,25 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			for(i in 1:ncol(ICCs)) lines(theta, 
 										ICCs[ ,i], col = colors[i], ...)
 			if(legend == TRUE) {
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+				plot(theta, seq(0, 1, length.out = length(theta)), 
+					type = "n",
+					xlab = "",
+					ylab = "",
+					bty = "n",
+					main = "",
+					xaxt = "n",
+					yaxt = "n")
 				legend("topright", 
-					inset = c(-0.3, 0), 
 					legend = colnames(ICCs),
 					col = colors,
-					lty = 1)
+					lty = 1,
+					box.lwd = 0)
 				}
 			if(store == TRUE) {
 				return(ICCs)
 			}	
-		}
-			
+		}			
 	}
 	if(type == "ICP") {
 		if(length(ob) == 2) {
@@ -312,7 +334,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 				polytomous models")
 		}
 		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+			par(mar = c(5, 4, 4, 7.5) + 0.1)
 		}
 		if(ncol(sfile) == 3) {
 			is <- split(sfile, sfile$Item)
@@ -356,26 +378,35 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 				xlab = expression(Theta),
 				ylab = "Probability",
 				main = paste("Item-Category Probabilities: ", 
-								names(b)[i]),
-				...)
+								names(b)[i]) )
 		
 				for(j in seq_along(catLines[[i]])) {
-					lines(x = theta, y = catLines[[i]][[j]], col = colors[j])	
+					lines(x = theta, y = catLines[[i]][[j]], col = colors[j])
+				}	
 					if(legend == TRUE) {
+						 par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+						 plot(0, 0, 
+							xaxt = "n",
+							yaxt = "n",
+							type = "n",
+							xlab = "",
+							ylab = "",
+							main = "", 
+							bty = "n")
 						 legend("topright", 
-							inset = c(-0.3, 0), 
 							legend = paste("Cat", 1:length(catLines[[i]])),
 							col = colors[1:length(catLines[[i]])],
-							lty = 1)
-						 par(xpd = FALSE)
+							lty = 1,
+							box.lwd = 0)
+						 par(mar = c(5, 4, 4, 7.5) + 0.1)
 					}
 				}
 			}
-	}
+	
 	
 	if(type == "thresholds") {
 		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1, xpd = TRUE)
+			par(mar = c(5, 4, 4, 7.5) + 0.1)
 		}
 
 		if(ncol(sfile) == 3) {
@@ -416,15 +447,24 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			}
 
 			if(legend == TRUE) {
+				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
 				taus <- lapply(1:ncol(lines[[i]]), function(i) {
 							bquote(tau[.(i)])
 						})
-			 legend("topright", 
-				inset = c(-0.3, 0), 
-				legend = as.expression(taus),
-				col = colors[1:ncol(lines[[i]])],
-				lty = 1)
-			 par(xpd = FALSE)
+				plot(0, 0, 
+					type = "n",
+					xlab = "",
+					xaxt = "n",
+					ylab = "",
+					yaxt = "n",
+					bty = "n",
+					main = "")
+				 legend("topright", 
+					legend = as.expression(taus),
+					col = colors[1:ncol(lines[[i]])],
+					lty = 1,
+					box.lwd = 0)
+			 	par(mar = c(5, 4, 4, 7.5) + 0.1)
 			}
 		}
 	if(store == TRUE) {
@@ -449,10 +489,13 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		if(length(colors) != 2) {
 			colors <- c("black", "blue")
 		}
+		par(c(5, 4, 4, 6) + 0.1)
 
 		plot(densI, 
 			 main = "Person/Item Probability Density Distributions",
 			 type = "n",
+			 xlim = c(min(c(densP$x, densI$x)), max(c(densP$x, densI$x))),
+			 ylim = c(0, max(c(densP$y, densI$y))),
 			 ...)
 		lines(densI, 
 			 col = colors[1],
@@ -462,6 +505,12 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			col = colors[2],
 			lwd = parse(text = lineW)[[3]],
 			lty = parse(text = lineT)[[3]])
+		
+		par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
+		plot(densI, 
+			type = "n", 
+			axes = FALSE,
+			ann = FALSE)
 		legend("topright",				
 			   c("Items", "Persons"), 
 			   lwd = c(parse(text = lineW)[[2]], parse(text = lineW)[[3]]),

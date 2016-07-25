@@ -4,19 +4,26 @@
 \alias{plot.r2Winsteps}
 \title{Plot the test characteristic curve}
 \usage{
-\method{plot}{r2Winsteps}(ob, type = "TIF", theta = seq(-4, 4, 0.1),
-  itemSelect = NULL, colors = NULL, legend = TRUE, store = FALSE, ...)
+\method{plot}{r2Winsteps}(ob, type = "TIF", rel = TRUE, theta = seq(-4, 4,
+  0.1), itemSelect = NULL, colors = NULL, legend = TRUE, store = FALSE,
+  ...)
 }
 \arguments{
 \item{ob}{Objects of class r2Winsteps}
 
 \item{type}{The type of plot to produce. Valid values are "TIF", "IIFs",
-"TIF/IIF", "TCC", "ICCs" "ICP", and "thresholds". These correspond to,
-respectively, the test information function,  item information
-functions, both the test and item information functions, the test
-characteristic curve, item characteristic curves, item-category
-probabilities, and the Thurstonion thresholds. Note that ICP and Thresholds
-are only available for polytomous models. Defaults to "TIF".}
+"TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
+correspond to, respectively, the test information function, item information
+functions, the test characteristic curve, item characteristic curves,
+item-category probabilities, Thurstonion thresholds, and overlayed item and 
+person densities. Note that ICP and Thresholds are only available for 
+polytomous models. When specifying \code{lty} or \code{lwd} for "iDens", a 
+vector (of length 2) must be supplied, corresponding to each distribution. 
+Defaults to "TIF".}
+
+\item{rel}{When \code{type == "TIF"}, should the distribution be shaded 
+according to reliability? Defaults to \code{TRUE} and shades the
+distribution according to 0.8 and 0.7 reliabilities.}
 
 \item{theta}{Theta values from which the information function values are 
 calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of 
@@ -30,10 +37,10 @@ which case all items will be used.}
 
 \item{store}{Optional logical argument to return data used in plotting 
 (not available for all plot types). For example, when \code{store = TRUE}
-and \code{type = TIF}, information under the specified theta range will be
+and \code{type = "TIF"}, information under the specified theta range will be
 returned.}
 
-\item{...}{Additional arguments passed to \code{plot}}
+\item{...}{Additional arguments passed to \code{\link{plot}}.}
 }
 \description{
 Plot the test characteristic curve
