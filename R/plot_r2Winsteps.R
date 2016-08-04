@@ -199,72 +199,91 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		}
 		if(length(ob) == 2) {
 			yUpperLim <- max(apply(IIF, 2, max))
+		}
+		if(length(ob) == 3) {
+			yUpperLim <- max(apply(IIFs, 2, max))
+		}
+		pargs <- list(x = quote(theta), 
+			 	  y = quote(seq(0, yUpperLim, length.out = length(theta))),
+			 	  type = "n",
+			 	  ...)
+		if(is.null(pargs$xlab)) {
+			pargs$xlab <- quote(expression(Theta))
+		}
+		if(is.null(pargs$ylab)) {
+			pargs$ylab <- "Information"
+		}
+		if(is.null(pargs$main)) {
+			pargs$main <- "Item Information Functions"
+		}
+		if(is.null(pargs$bty)) {
+			pargs$bty <- "n"
+		}
+		do.call(plot, pargs)
+		
+		if(length(ob) == 2) {
+			for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])	
+		}
+		if(length(ob) == 3) {
+			for(i in 1:ncol(IIFs)) lines(theta, IIFs[ ,i], col = colors[i])
+		}
+		if(legend == TRUE) {
+			par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
 			plot(theta, seq(0, yUpperLim, length.out = length(theta)),
 				type = "n", 
-				xlab = expression(Theta),
-				ylab = "Information", 
-				main = "Item Information Functions", 
-				...)
-			for(i in 1:ncol(IIF)) lines(theta, IIF[ ,i], col = colors[i])
-			if(legend == TRUE) {
-				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-				plot(theta, seq(0, yUpperLim, length.out = length(theta)),
-					type = "n", 
-					xaxt = "n",
-					yaxt = "n",
-					bty = "n",
-					xlab = "",
-					ylab = "", 
-					main = "")
+				xaxt = "n",
+				yaxt = "n",
+				bty = "n",
+				xlab = "",
+				ylab = "", 
+				main = "")
+			if(length(ob) == 2) {
 				legend("topright",  
 					legend = colnames(IIF),
 					col = colors,
 					lty = 1)
 			}
-			if(store == TRUE) {
-				return(IIFs)
-			}		
-		}
-		if(length(ob) == 3) {
-			yUpperLim <- max(apply(IIFs, 2, max))
-			plot(theta, seq(0, yUpperLim, length.out = length(theta)),
-				type = "n", 
-				xlab = expression(Theta),
-				ylab = "Information", 
-				main = "Item Information Functions", 
-				...)
-			for(i in 1:ncol(IIFs)) lines(theta, IIFs[ ,i], col = colors[i])
-			if(legend == TRUE) {
-				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-				plot(theta, seq(0, yUpperLim, length.out = length(theta)),
-					type = "n", 
-					xaxt = "n",
-					yaxt = "n",
-					bty = "n",
-					xlab = "",
-					ylab = "", 
-					main = "")
+			if(length(ob) == 3) {
 				legend("topright", 
 					legend = colnames(IIFs),
 					col = colors,
 					lty = 1,
 					box.lwd = 0)
 			}
-			if(store == TRUE) {
+		}
+		if(store == TRUE) {
+			if(length(ob) == 2) {
+				return(IIF)
+			}
+			if(length(ob) == 3) {
 				return(IIFs)
 			}
-		}
-
+		}		
 	}
 	if(type == "TCC") {
 		expectedTotal <- rowSums(p)
-		plot(theta, expectedTotal, 
-			type = "l",
-			xlab = expression(Theta),
-			ylab = "Expected Total Raw Score",
-			main = "Test Characteristic Curve",
-			col = colors,
-			...)
+		
+		pargs <- list(x = quote(theta), 
+			 	  y = quote(expectedTotal),
+			 	  type = "l",
+			 	  ...)
+		if(is.null(pargs$xlab)) {
+			pargs$xlab <- quote(expression(Theta))
+		}
+		if(is.null(pargs$ylab)) {
+			pargs$ylab <- "Expected Total Raw Score"
+		}
+		if(is.null(pargs$main)) {
+			pargs$main <- "Test Characteristic Curve"
+		}
+		if(is.null(pargs$bty)) {
+			pargs$bty <- "n"
+		}
+		if(is.null(pargs$col)) {
+			pargs$col <- colors
+		}
+		do.call(plot, pargs)
+		
 		if(store == TRUE) {
 			return(expectedTotal)
 		}
@@ -274,63 +293,70 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			par(mar=c(5, 4, 4, 8) + .1)
 		}
 		if(length(ob) == 2) {
+			pargs <- list(x = quote(theta),
+						  y = seq(0, 1, length.out = length(theta)),
+						  type = "n",
+						  ...)
+		}
+		if(length(ob) == 3) {
+			pargs <- list(x = quote(theta),
+						  y = seq(0, max(ICCs), length.out = length(theta)),
+						  type = "n",
+						  ...)
+		}
+		if(is.null(pargs$xlab)) {
+			pargs$xlab <- quote(expression(Theta))
+		}
+		if(is.null(pargs$ylab)) {
+			pargs$ylab <- "Expected Total Raw Score"
+		}
+		if(is.null(pargs$main)) {
+			pargs$main <- "Item Characteristic Curves"
+		}
+		if(is.null(pargs$bty)) {
+			pargs$bty <- "n"
+		}
+		if(is.null(pargs$col)) {
+			pargs$col <- colors
+		}
+		do.call(plot, pargs)
+		
+		if(length(ob) == 2) {
+			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i], ...)
+		}
+		if(length(ob) == 3) {
+			for(i in 1:ncol(ICCs)) lines(theta, 
+										ICCs[ ,i], col = colors[i], ...)
+		}
+		if(legend == TRUE) {
+			par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
 			plot(theta, seq(0, 1, length.out = length(theta)), 
 				type = "n",
-				xlab = expression(Theta),
-				ylab = "Expected Total Raw Score",
-				main = "Item Characteristic Curves",
-				col = colors,
-				...)
-			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i], ...)
-			if(legend == TRUE) {
-				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-				plot(theta, seq(0, 1, length.out = length(theta)), 
-					type = "n",
-					xlab = "",
-					ylab = "",
-					main = "",
-					xaxt = "n",
-					yaxt = "n")
+				bty = "n",
+				xlab = "",
+				ylab = "",
+				main = "",
+				xaxt = "n",
+				yaxt = "n")
+			if(length(ob) == 2) {
 				legend("topright", 
 					legend = colnames(p),
 					col = colors,
+					box.lwd = 0,
 					lty = 1)
 			}
-			if(store == TRUE) {
-				return(p)
-			}
-		}
-		else {
-			plot(theta, 
-					seq(0, max(ICCs), length.out = length(theta)), 
-				type = "n",
-				xlab = expression(Theta),
-				ylab = "Expected Total Raw Score",
-				main = "Item Characteristic Curves",
-				col = colors,
-				...)
-			for(i in 1:ncol(ICCs)) lines(theta, 
-										ICCs[ ,i], col = colors[i], ...)
-			if(legend == TRUE) {
-				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-				plot(theta, seq(0, 1, length.out = length(theta)), 
-					type = "n",
-					xlab = "",
-					ylab = "",
-					bty = "n",
-					main = "",
-					xaxt = "n",
-					yaxt = "n")
+			if(length(ob) == 3) {
 				legend("topright", 
 					legend = colnames(ICCs),
 					col = colors,
-					lty = 1,
-					box.lwd = 0)
-				}
-			if(store == TRUE) {
-				return(ICCs)
-			}	
-		}			
+					box.lwd = 0,
+					lty = 1)
+			}
+		}
+		if(store == TRUE) {
+			if(length(ob) == 2) return(p)
+			if(length(ob) == 3) return(ICCs)
+		}
 	}
 	if(type == "ICP") {
 		if(length(ob) == 2) {
