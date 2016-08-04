@@ -141,25 +141,28 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	}
 	
 	if(type == "TIF") {
-		if(legend == FALSE) {
-			plot(theta, rowSums(IIF), 
-				type = "l", 
-				xlab = expression(Theta),
-				ylab = "Information", 
-				main = "Test Information Function",
-				col = colors,
-				...)
-		}
 		if(legend == TRUE) {
-			par(c(5, 4, 4, 6) + 0.1)
-			plot(theta, rowSums(IIF), 
-				type = "l", 
-				xlab = expression(Theta),
-				ylab = "Information", 
-				main = "Test Information Function",
-				col = colors,
-				...)
+			par(mar = c(5, 4, 4, 6) + 0.1)
 		}
+		
+		pargs <- list(x = quote(theta), 
+				 	  y = quote(rowSums(IIF)),
+				 	  type = "l",
+				 	  ...)
+		if(is.null(pargs$xlab)) {
+			pargs$xlab <- quote(expression(Theta))
+		}
+		if(is.null(pargs$ylab)) {
+			pargs$ylab <- "Information"
+		}
+		if(is.null(pargs$main)) {
+			pargs$main <- "Test Information Function"
+		}
+		if(is.null(pargs$col)) {
+			pargs$col <- colors
+		}
+		do.call("plot", pargs)
+		
 		if(rel == TRUE) {
 			info <- rowSums(IIF)
 
@@ -174,17 +177,18 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			polygon(c(min(theta70), theta70, max(theta70)), c(0, info70, 0), 
 				col = rgb(0, 0.2, 0.4, 0.1),
 				border = FALSE)
-			if(legend == TRUE) {
-				par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-				legend("topright", 
-					    box.lwd = 0,
-					    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
-					    border = c("white", "white"),
-					    c(expression(italic(p * theta * theta^"'" == 0.80)),
-					      expression(italic(p * theta * theta^"'" == 0.70))),
-					    cex = 1.5)
-						}
-					}
+		}
+		if(legend == TRUE) {
+			par(mar = c(5.1, 8, 4.1, 2), new = TRUE)
+			legend("topright", 
+				    box.lwd = 0,
+				    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
+				    border = c("white", "white"),
+				    c(expression(italic(p * theta * theta^"'" == 0.80)),
+				      expression(italic(p * theta * theta^"'" == 0.70))),
+				    cex = 1.5)
+			par(mar = c(5, 4, 4, 2) + 0.1)
+		}
 		if(store == TRUE) {
 			return(rowSums(IIF))
 		}
@@ -475,7 +479,9 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		densP <- density(ob$PersonParameters$Theta)
 		densI <- density(ob$ItemParameters$Difficulty, bw = densP$bw)
 		
-		pargs <- list("x" = quote(density(ob$PersonParameters$Theta)), ...)
+		pargs <- list(x = quote(density(ob$PersonParameters$Theta)), 
+					  type = "n",
+					   ...)
 		
 		if(is.null(pargs$lwd)) {
 			lineW <- quote(c(1, 2))
@@ -496,8 +502,6 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		if(length(colors) != 2) {
 			colors <- c("black", "blue")
 		}
-
-		pargs$type <- "n"
 
 		par(mar = c(5, 4, 4, 6) + 0.1)
 		do.call("plot", pargs)
