@@ -475,28 +475,32 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		densP <- density(ob$PersonParameters$Theta)
 		densI <- density(ob$ItemParameters$Difficulty, bw = densP$bw)
 		
-		if(!is.null(args$lwd)) {
-			lineW <- args$lwd
-		} else {
+		pargs <- list("x" = quote(density(ob$PersonParameters$Theta)), ...)
+		
+		if(is.null(pargs$lwd)) {
 			lineW <- quote(c(1, 2))
 		}
-		if(!is.null(args$lty)) {
-			lineT <- args$lty
-		} else {
+		if(is.null(pargs$lty)) {
 			lineT <- quote(c(1, 2))
 		}
-
+		if(is.null(pargs$xlim)) {
+			pargs$xlim <- quote(c(min(c(densP$x, densI$x)),
+									max(c(densP$x, densI$x))))
+		}
+		if(is.null(pargs$ylim)) {
+			pargs$ylim <- quote(c(0, max(c(densP$y, densI$y))))
+		}
+		if(is.null(pargs$main)) {
+			pargs$main <- "Person/Item Probability Density Distributions"
+		}
 		if(length(colors) != 2) {
 			colors <- c("black", "blue")
 		}
-		par(c(5, 4, 4, 6) + 0.1)
 
-		plot(densI, 
-			 main = "Person/Item Probability Density Distributions",
-			 type = "n",
-			 xlim = c(min(c(densP$x, densI$x)), max(c(densP$x, densI$x))),
-			 ylim = c(0, max(c(densP$y, densI$y))),
-			 ...)
+		pargs$type <- "n"
+
+		par(mar = c(5, 4, 4, 6) + 0.1)
+		do.call("plot", pargs)
 		lines(densI, 
 			 col = colors[1],
 			 lwd = parse(text = lineW)[[2]],
@@ -517,5 +521,6 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			   lty = c(parse(text = lineT)[[2]], parse(text = lineT)[[3]]),
 			   col = colors,
 			   box.lwd = 0)
+		par(mar = c(5, 4, 4, 2) + 0.1)
 	}
 }
