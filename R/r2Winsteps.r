@@ -43,7 +43,7 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
     }
 
     #Convert itms to character, code missing data as "M"
-    itms <- apply(itms, 2, as.character)
+    itms <- as.data.frame(Map(as.character, itms))
     for (i in 1:ncol(itms)) {
         itms[, i] <- ifelse(is.na(itms[, i]), "M", itms[, i])
     }
