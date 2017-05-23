@@ -26,4 +26,3 @@ A dataset consisting of three dummy demographic variables and five item
 responses.
 }
 \keyword{datasets}
-

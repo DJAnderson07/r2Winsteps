@@ -32,4 +32,3 @@ This function uses the Winsteps software to analyze data, and then reads the
 \code{\link{r2Winsteps}} \code{\link{batchWinsteps}} 
   \code{\link{batch.pfile}} \code{\link{batch.ifile}}
 }
-

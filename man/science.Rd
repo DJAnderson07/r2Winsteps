@@ -21,4 +21,3 @@ science items, with possible values 0, 1, or 2, corresponding to the
 responses "dislike", "neutral", or "like".
 }
 \keyword{datasets}
-

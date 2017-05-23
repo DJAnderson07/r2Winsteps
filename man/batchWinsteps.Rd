@@ -33,4 +33,3 @@ This function searches the working directory for Winsteps control files and
   directory. Alternatively, a vector of control file names can be supplied,
   from which teh batch processing file is constructed.
 }
-

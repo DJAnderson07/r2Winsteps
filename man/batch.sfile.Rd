@@ -27,4 +27,3 @@ except that structure files are read into R rather than item files. These
 are necessary for plotting results from rating scale or partial credit 
 models.
 }
-

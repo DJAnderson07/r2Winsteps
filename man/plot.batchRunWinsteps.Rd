@@ -15,7 +15,7 @@ calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of
 this range are used for the x-axes.}
 
 \item{colors}{Line colors for the plot. Defaults to NULL, in which case the
-\code{rainbow} function is used to create colors.}
+colors are equivalent to the default ggplot colors.}
 
 \item{store}{Optional logical argument to return data used in plotting.}
 
@@ -24,4 +24,3 @@ this range are used for the x-axes.}
 \description{
 Plot the test characteristic curve
 }
-

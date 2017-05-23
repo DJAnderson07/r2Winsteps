@@ -62,4 +62,3 @@ This function looks at a directory, identifies all the pfiles in the
  that this function assumes standard .txt files. For more information on 
  Winsteps item files, see \url{http://www.winsteps.com/winman/pfile.htm}.
 }
-

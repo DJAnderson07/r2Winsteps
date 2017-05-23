@@ -53,4 +53,3 @@ This function looks at a directory, identifies all the ifiles in the
   more information on Winsteps item files, see 
   \url{http://www.winsteps.com/winman/ifile.htm}.
 }
-

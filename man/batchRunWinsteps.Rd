@@ -39,4 +39,3 @@ This function uses the Winsteps software to batch analyze a given list of
 \code{\link{batch_r2Winsteps}} \code{\link{batchWinsteps}} 
   \code{\link{batch.pfile}} \code{\link{batch.ifile}}
 }
-

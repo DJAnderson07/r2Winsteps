@@ -27,4 +27,3 @@ Function takes the typical arguments supplied by \code{\link{r2Winsteps}}
  in the form of a list, and writes out Winsteps control and data files for 
  each element of the list. See also \code{\link{r2Winsteps}}.
 }
-

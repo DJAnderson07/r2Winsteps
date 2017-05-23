@@ -33,7 +33,7 @@ this range are used for the x-axes.}
 which case all items will be used.}
 
 \item{colors}{Line colors for the plot. Defaults to NULL, in which case the
-\code{rainbow} function is used to create colors.}
+colors match the defaults from ggplot.}
 
 \item{store}{Optional logical argument to return data used in plotting 
 (not available for all plot types). For example, when \code{store = TRUE}
@@ -45,4 +45,3 @@ returned.}
 \description{
 Plot the test characteristic curve
 }
-

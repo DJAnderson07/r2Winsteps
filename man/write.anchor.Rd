@@ -39,4 +39,3 @@ This function takes two primary argument: The raw dataframe of items to be
   common items specified as having a fixed item difficulty, according to 
   their value in \code{eqIfile}.
 }
-

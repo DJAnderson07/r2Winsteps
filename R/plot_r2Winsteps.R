@@ -15,7 +15,7 @@
 #' @param itemSelect Items to be used in the plotting. Defaults to NULL, in
 #' which case all items will be used.
 #' @param colors Line colors for the plot. Defaults to NULL, in which case the
-#' \code{rainbow} function is used to create colors.
+#' colors match the defaults from ggplot.
 #' @param theta Theta values from which the information function values are 
 #' calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of 
 #' this range are used for the x-axes.
@@ -135,9 +135,12 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	colnames(IIFs) <- names(b)
 	}
 
-	#cols <- colorRampPalette(c("red", "green", "blue"))
+	col_hue <- function(n) {
+ 		 hues = seq(15, 375, length = n + 1)
+  		 grDevices::hcl(h = hues, c = 100, l = 65)[1:n]
+	}
 	if(is.null(colors)) {
-		colors <- rainbow(ncol(IIF))
+		colors <- col_hue(ncol(IIF))
 	}
 	
 	if(type == "TIF") {
@@ -230,6 +233,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		if(legend == TRUE) {
 			par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
 			plot(theta, seq(0, yUpperLim, length.out = length(theta)),
+				bty = "n",
 				type = "n", 
 				xaxt = "n",
 				yaxt = "n",
@@ -388,13 +392,13 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		return(lines)
 		}
 		if(ncol(sfile) == 2) {
-			colors <- rainbow(length(sfile$delta) + 1)
+			colors <- col_hue(length(sfile$delta) + 1)
 			catLines <- lapply(1:length(b), function(i) {
 				catProb(sfile$delta, b[i], theta)
 			})
 		}
 		if(ncol(sfile) == 3) {
-			colors <- rainbow(max(sapply(is, nrow)) + 1)
+			colors <- col_hue(max(sapply(is, nrow)) + 1)
 			catLines <- lapply(1:length(delta), function(i) {
 				catProb(delta[[i]]$delta, b[i], theta)
 			})
@@ -402,6 +406,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 
 		for(i in seq_along(b)) {
 			plot(0, 0, 
+				bty = "n", 
 				xlim = c(min(theta), max(theta)), 
 				ylim = c(0, 1), 
 				type = "n",
@@ -462,9 +467,10 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		}
 
 		lines <- lapply(seq_along(b), function(i) thurston(delta[[i]], b[i], theta))				
-		colors <- rainbow(max(sapply(lines, ncol)))
+		colors <- col_hue(max(sapply(lines, ncol)))
 		for(i in seq_along(lines)) {
 			plot(0, 0, 
+					bty = "n",
 					xlim = c(min(theta), max(theta)), 
 					ylim = c(0, 1), 
 					type = "n",
@@ -482,6 +488,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 							bquote(tau[.(i)])
 						})
 				plot(0, 0, 
+					bty = "n",
 					type = "n",
 					xlab = "",
 					xaxt = "n",
@@ -542,6 +549,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		
 		par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
 		plot(densI, 
+			bty = "n",
 			type = "n", 
 			axes = FALSE,
 			ann = FALSE)

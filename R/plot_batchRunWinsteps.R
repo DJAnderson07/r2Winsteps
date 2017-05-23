@@ -4,7 +4,7 @@
 #' calculated from. Defaults to a sequence from -4 to 4 by 0.1. The limits of 
 #' this range are used for the x-axes.
 #' @param colors Line colors for the plot. Defaults to NULL, in which case the
-#' \code{rainbow} function is used to create colors.
+#' colors are equivalent to the default ggplot colors.
 #' @param store Optional logical argument to return data used in plotting.
 #' @param ... Additional arguments passed to \code{\link{plot}}.
 
@@ -15,7 +15,10 @@ plot.batchRunWinsteps <- function(ob, theta = seq(-4, 4, 0.1), colors = NULL,
 	
 	b <- lapply(ob, function(x) x$ItemParameters$Difficulty)
 	
-		
+	col_hue <- function(n) {
+ 		hues = seq(15, 375, length = n + 1)
+  		grDevices::hcl(h = hues, c = 100, l = 65)[1:n]
+	}
 	prob <- function(b, theta) {
 		1 /(1 + exp(-(theta - b)))
 	}
@@ -28,7 +31,7 @@ plot.batchRunWinsteps <- function(ob, theta = seq(-4, 4, 0.1), colors = NULL,
 	expectedTotal <- sapply(p, function(x) rowSums(x))
 		
 	if(is.null(colors)) {
-		colors <- rainbow(ncol(expectedTotal))
+		colors <- col_hue(ncol(expectedTotal))
 	}	
 
 	m <- matrix(c(rep(1, 8), 2, 2), ncol = 10)
@@ -39,10 +42,11 @@ plot.batchRunWinsteps <- function(ob, theta = seq(-4, 4, 0.1), colors = NULL,
 		xlab = expression(Theta),
 		ylab = "Expected Total Raw Score",
 		main = "",
+		bty = "n",
 		...)
 	title("Test Characteristic Curve", outer = TRUE, line = -3)
 	invisible(sapply(1:ncol(expectedTotal), function(i) {
-		lines(theta, expectedTotal[ ,i], col = colors[i])	
+		lines(theta, expectedTotal[ ,i], col = colors[i], lwd = 2)	
 	}))
 	par(mar = c(5.1, 0, 4.1, 0))
 	plot(rep(0, length(expectedTotal)), expectedTotal, 

@@ -55,4 +55,3 @@ Control and Data file for analysis with Winsteps.
 Function for writing control and data files from R to Winsteps for Rasch 
   analysis.
 }
-
