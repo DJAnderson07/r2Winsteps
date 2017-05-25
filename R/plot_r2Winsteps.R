@@ -169,27 +169,42 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		if(rel == TRUE) {
 			info <- rowSums(IIF)
 
-			theta80 <- theta[info >= 5]
-			info80 <- info[info >= 5]
-			polygon(c(min(theta80), theta80, max(theta80)), c(0, info80, 0), 
-				col = rgb(0, 0.2, 0.4, 0.1),
-				border = FALSE)
-
-			theta70 <- theta[info >= 3.33333]
-			info70 <- info[info >= 3.333333]
-			polygon(c(min(theta70), theta70, max(theta70)), c(0, info70, 0), 
-				col = rgb(0, 0.2, 0.4, 0.1),
-				border = FALSE)
+			if(length(theta[info >= 5]) > 0) {
+				theta80 <- theta[info >= 5]
+				info80 <- info[info >= 5]
+				polygon(c(min(theta80), theta80, max(theta80)), c(0, info80, 0), 
+					col = rgb(0, 0.2, 0.4, 0.1),
+					border = FALSE)
+			}
+			if(length(theta[info >= 3.333333]) > 0) {
+				theta70 <- theta[info >= 3.33333]
+				info70 <- info[info >= 3.333333]
+				polygon(c(min(theta70), theta70, max(theta70)), c(0, info70, 0), 
+					col = rgb(0, 0.2, 0.4, 0.1),
+					border = FALSE)
+			}
 		}
 		if(legend == TRUE) {
 			par(mar = c(5.1, 8, 4.1, 2), new = TRUE)
-			legend("topright", 
-				    box.lwd = 0,
-				    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
-				    border = c("white", "white"),
-				    c(expression(italic(p * theta * theta^"'" == 0.80)),
-				      expression(italic(p * theta * theta^"'" == 0.70))),
-				    cex = 1.5)
+			if(length(theta[info >= 5]) > 0) {
+				legend("topright", 
+					    box.lwd = 0,
+					    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
+					    border = c("white", "white"),
+					    c(expression(italic(p * theta * theta^"'" == 0.80)),
+					      expression(italic(p * theta * theta^"'" == 0.70))),
+					    cex = 1.5)
+			}
+			if(length(theta[info >= 5]) == 0 &
+			   length(theta[info >= 3.333333]) > 0) {
+				legend("topright", 
+					    box.lwd = 0,
+					    fill = c(rgb(0, 0.2, 0.4, 0.2), rgb(0, 0.2, 0.4, 0.1)),
+					    border = c("white", "white"),
+					    legend = expression(italic(p * theta * theta^"'" == 0.70)),
+					    cex = 1.5)
+			}
+
 			par(mar = c(5, 4, 4, 2) + 0.1)
 		}
 		if(store == TRUE) {
@@ -294,7 +309,9 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	}
 	if(type == "ICCs") {
 		if(legend == TRUE) {
-			par(mar=c(5, 4, 4, 8) + .1)
+			max_char <- max(nchar(as.character(ob$ItemParameters$ItemID)))
+			wdth <- 0.9 - (max_char * 0.01)
+			layout(t(c(1, 2)), widths = c(wdth, 1 - wdth))	
 		}
 		if(length(ob) == 2) {
 			pargs <- list(x = quote(theta),
@@ -326,35 +343,48 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 		do.call(plot, pargs)
 		
 		if(length(ob) == 2) {
-			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = colors[i], ...)
+			for(i in 1:ncol(p)) lines(theta, p[ ,i], col = pargs$col[i], ...)
 		}
 		if(length(ob) == 3) {
 			for(i in 1:ncol(ICCs)) lines(theta, 
 										ICCs[ ,i], col = colors[i], ...)
 		}
 		if(legend == TRUE) {
-			par(mar = c(5.1, 0, 4.1, 2), new = TRUE)
-			plot(theta, seq(0, 1, length.out = length(theta)), 
+			op <- par(mar = c(5.1, max_char * .35, 4.1, 0))
+			on.exit(par(op))
+			plot(seq(0, 1, length = 15), 
+				 1:15,
 				type = "n",
-				bty = "n",
-				xlab = "",
-				ylab = "",
-				main = "",
+				bty = "n", 
 				xaxt = "n",
-				yaxt = "n")
+				xlab = "", 
+				yaxt = "n",
+				ylab = "")
+
 			if(length(ob) == 2) {
-				legend("topright", 
-					legend = colnames(p),
-					col = colors,
-					box.lwd = 0,
-					lty = 1)
+				axes <- cbind(c(0, 1), rep(1:ncol(p), each = 2))
 			}
 			if(length(ob) == 3) {
-				legend("topright", 
-					legend = colnames(ICCs),
-					col = colors,
-					box.lwd = 0,
-					lty = 1)
+				axes <- cbind(c(0, 1), rep(1:ncol(ICCs), each = 2))
+			}
+			
+			Map(lines, 
+				split(axes[ ,1], axes[ ,2]), 
+				split(axes[ ,2], axes[ ,2]),
+				col = pargs$col)
+			if(length(ob) == 2) {
+				axis(2, 
+					lwd = 0, 
+					at = 1:ncol(p), 
+					labels = as.character(ob$ItemParameters$ItemID), 
+					las = 2)
+			}
+			if(length(ob) == 3) {
+				axis(2, 
+					lwd = 0, 
+					at = 1:ncol(ICCs), 
+					labels = as.character(ob$ItemParameters$ItemID), 
+					las = 2)
 			}
 		}
 		if(store == TRUE) {
