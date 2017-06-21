@@ -145,7 +145,7 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 	
 	if(type == "TIF") {
 		if(legend == TRUE) {
-			par(mar = c(5, 4, 4, 6) + 0.1)
+			par(mar = c(5, 4, 4, 3) + 0.1)
 		}
 		
 		pargs <- list(x = quote(theta), 
