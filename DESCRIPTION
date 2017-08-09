@@ -2,7 +2,9 @@ Package: r2Winsteps
 Title: A package for interfacing between R and the Rasch modeling software
     Winsteps
 Version: 0.0.0.9000
-Authors@R: person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre"))
+Authors@R: c(
+    person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre")),
+    person("Daniel", "Farley", email = "dfarley@uoregon.edu", role = "ctb"))
 Description: The `r2Winsteps` package was developed to provide a convenient
     interface between *R* and the Rasch modeling software *Winsteps*. The package
     is not intended to encompass the full capabilities of *Winsteps*, but rather
