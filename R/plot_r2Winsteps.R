@@ -1,10 +1,11 @@
 #' Plot the test characteristic curve
 #' @param ob Objects of class r2Winsteps
-#' @param type The type of plot to produce. Valid values are "TIF", "IIFs",
-#' "TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
+#' @param type The type of plot to produce. Valid values are "TIF", "IIFs", 
+#' "CSEM", "TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
 #' correspond to, respectively, the test information function, item information
-#' functions, the test characteristic curve, item characteristic curves,
-#' item-category probabilities, Thurstonion thresholds, and overlayed item and 
+#' functions, the conditional standard error of measure curves, the test 
+#' characteristic curve, item characteristic curves, item-category 
+#' probabilities, Thurstonion thresholds, and overlayed item and 
 #' person densities. Note that ICP and Thresholds are only available for 
 #' polytomous models. When specifying \code{lty} or \code{lwd} for "iDens", a 
 #' vector (of length 2) must be supplied, corresponding to each distribution. 
@@ -23,11 +24,15 @@
 #' (not available for all plot types). For example, when \code{store = TRUE}
 #' and \code{type = "TIF"}, information under the specified theta range will be
 #' returned.
+#' @param grid Optional grid for interpreting graphs. Defaults to TRUE, in 
+#' which case the graph is produced with a grid.
+#' @param gridCol Optional color function for grid. Defaults to "gray80", in 
+#' which case the graph is produced with a "gray80" color grid.
 #' @param ... Additional arguments passed to \code{\link{plot}}.
 
 plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE, 
 	theta = seq(-4, 4, 0.1), itemSelect = NULL, colors = NULL, 
-	legend = TRUE, store = FALSE, ...) {
+	legend = TRUE, store = FALSE, grid = TRUE, gridCol = "gray80", ...) {
 	
 	args <- as.list(match.call())
 
@@ -591,4 +596,44 @@ plot.r2Winsteps <- function(ob, type = "TIF", rel = TRUE,
 			   box.lwd = 0)
 		par(mar = c(5, 4, 4, 2) + 0.1)
 	}
+
+	if(type == "CSEM") {
+		tmp <- ob$PersonParameters
+		tmp <- tmp[order(tmp$Theta), ]
+			
+			pargs <- list(x = quote(tmp$Theta), 
+				 	  y = quote(tmp$SE*10),
+				 	  type = "l",
+				 	  ...)
+			if(is.null(pargs$bty)) {
+				pargs$bty <- "n"
+			}
+			if(is.null(pargs$lwd)) {
+				pargs$lwd <- "2"
+			}
+			if(is.null(pargs$ylim)) {
+				pargs$ylim <- c(0, max(tmp$SE*10))
+			}
+			if(is.null(pargs$xlim)) {
+				pargs$xlim <- c(min(tmp$Theta), max(tmp$Theta))
+			}
+			if(is.null(pargs$xlab)) {
+				pargs$xlab <- quote(expression(paste("Person ability ", theta)))
+			}
+			if(is.null(pargs$ylab)) {
+				pargs$ylab <- "Standard Error"
+			}
+			if(is.null(pargs$main)) {
+				pargs$main <- "Conditional Standard Error Curve"
+			}
+			if(is.null(pargs$col)) {
+			pargs$col <- colors
+		}
+		do.call("plot", pargs)
+		if(grid == TRUE) {
+			grid(col = gridCol)
+		}
+				
+	}
+	
 }

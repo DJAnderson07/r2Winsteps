@@ -6,16 +6,17 @@
 \usage{
 \method{plot}{r2Winsteps}(ob, type = "TIF", rel = TRUE, theta = seq(-4, 4,
   0.1), itemSelect = NULL, colors = NULL, legend = TRUE, store = FALSE,
-  ...)
+  grid = TRUE, gridCol = "gray80", ...)
 }
 \arguments{
 \item{ob}{Objects of class r2Winsteps}
 
-\item{type}{The type of plot to produce. Valid values are "TIF", "IIFs",
-"TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
+\item{type}{The type of plot to produce. Valid values are "TIF", "IIFs", 
+"CSEM", "TCC", "ICCs" "ICP", "thresholds", and "ipDens". These
 correspond to, respectively, the test information function, item information
-functions, the test characteristic curve, item characteristic curves,
-item-category probabilities, Thurstonion thresholds, and overlayed item and 
+functions, the conditional standard error of measure curves, the test 
+characteristic curve, item characteristic curves, item-category 
+probabilities, Thurstonion thresholds, and overlayed item and 
 person densities. Note that ICP and Thresholds are only available for 
 polytomous models. When specifying \code{lty} or \code{lwd} for "iDens", a 
 vector (of length 2) must be supplied, corresponding to each distribution. 
@@ -39,6 +40,12 @@ colors match the defaults from ggplot.}
 (not available for all plot types). For example, when \code{store = TRUE}
 and \code{type = "TIF"}, information under the specified theta range will be
 returned.}
+
+\item{grid}{Optional grid for interpreting graphs. Defaults to TRUE, in 
+which case the graph is produced with a grid.}
+
+\item{gridCol}{Optional color function for grid. Defaults to "gray80", in 
+which case the graph is produced with a "gray80" color grid.}
 
 \item{...}{Additional arguments passed to \code{\link{plot}}.}
 }
