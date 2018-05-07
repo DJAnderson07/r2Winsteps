@@ -45,7 +45,7 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
     #Convert itms to character, code missing data as "M"
     itms <- as.data.frame(Map(as.character, itms))
     for (i in 1:ncol(itms)) {
-        itms[, i] <- ifelse(is.na(itms[, i]), "M", itms[, i])
+        itms[, i] <- ifelse(is.na(itms[, i]), "M", as.character(itms[, i]))
     }
     
     #Find the column with the maximum width
@@ -79,12 +79,15 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
     }
 
     #Convert all dems columns to string; pad to largest column
-    dems <- as.data.frame(apply(dems, 2, as.character), stringsAsFactors = FALSE)
+    dems <- lapply(dems, as.character)
+    dems <- as.data.frame(lapply(dems, function(x) ifelse(is.na(x), "", x)),
+                                 stringsAsFactors = FALSE)
     for (i in 1:ncol(dems)) {
-        dems[, i] <- stringr::str_pad(dems[, i], max(nchar(dems[, 
-            i])), side = "right")
+        dems[, i] <- stringr::str_pad(dems[, i], 
+            lapply(dems, function(x) max(nchar(x), na.rm = TRUE))[[i]], 
+            side = "right")
     }
-    
+
     #Paste demos into a single string
     if(ncol(dems) == 1) {
         dstring <- dems[ ,1]
@@ -94,10 +97,8 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
     }
     
     #Put items and demos together
-    d <- data.frame(dems = dstring, responses = istring)
-    
-    #Demo string (not a factor)
-    d$dems <- as.character(d$dems)
+    d <- data.frame(dems = dstring, responses = istring, 
+                    stringsAsFactors = FALSE)
     
     #Put data together
     winData <- paste(d$dems, d$responses, sep = " ")
@@ -138,14 +139,13 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
             sep = ""))
     }
     
-    #Calculate peson variable lenghts
-    dLen <- rep(NA, ncol(dems))
-    for (i in 1:length(dLen)) {
-        dLen[i] <- max(nchar(dems[, i]))
-    }
-    dLengths <- data.frame(names(dems), dLen, first = cumsum(dLen) - 
-        dLen + 2, last = cumsum(dLen) + 1)
-    dLengths[1, 3] <- dLengths[1, 3] - 1
+    #Calculate person variable lenghts
+    dLen <- nchar(strsplit(dstring, "\\|")[[1]])
+    
+    dLengths <- data.frame(names(dems), dLen, last = cumsum(dLen + 1))
+    dLengths$first <- lag(dLengths$last) + 1
+    dLengths$first[1] <- 1
+  
     demoLengths <- paste(dLengths$first, dLengths$last, sep = "E")
     finalDemScript <- paste(paste("@", names(dems), sep = ""), 
         demoLengths, sep = " = ")
@@ -153,7 +153,7 @@ r2Winsteps<-function(itms, dems = NULL, partialCredit = FALSE, idelete = NULL,
     #Control File Name
     cntrlTitle <- paste(as.character(title), "Cntrl", sep = "")
     
-    #Warnings/erros
+    #Warnings/errors
     if(partialCredit == TRUE & length(cod) == 2){
         stop("Partial credit model defined for data with only two categories")
     }
