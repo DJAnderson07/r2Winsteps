@@ -17,11 +17,10 @@ Depends:
     R (>= 3.2.0)
 Imports:
     stringr (>= 1.0.0)
-URL: https://github.com/DJAnderson07/r2Winsteps
-BugReports: https://github.com/DJAnderson07/r2Winsteps/issues
+URL: https://github.com/datalorax/r2Winsteps
+BugReports: https://github.com/datalorax/r2Winsteps/issues
 License: MIT + file LICENSE
 Date: 2015-05-22
-COPYRIGHT HOLDER: Daniel Anderson
 LazyData: true
 Suggests:
     knitr
