@@ -115,9 +115,16 @@ batchRunWinsteps <- function(itmsL, demsL, titleL = NULL, keep = "none", ...) {
     call <- batch_r2Winsteps(itmsL, demsL, titleL = titleL, ...)
     batName <- ifelse(is.null(as.list(call)$batName), "r2WinstepsBatch", 
         as.list(call)$batName)
-    batFile <- paste(batName, ".bat", sep = "")
+    batFile <- paste0(batName, ".bat")
+    batFile <- file.path(getwd(), batFile)
+
+    if(.Platform$OS.type == "windows") {
+      system(paste("open", batFile))
+    }
+    else {
+      system(paste("wine cmd.exe /C", batFile))    
+    }
     
-    system(paste("open", batFile))
     
     repeat {
         Sys.sleep(0.1)
